@@ -4,7 +4,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 
-
 browser = webdriver.Chrome()
 browser.maximize_window()
 browser.get("https://store.steampowered.com/?l=russian")
