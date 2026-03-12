@@ -49,5 +49,5 @@ class TestLogin:
 
         assert ERROR_MESSAGE in error_element.text, (
             f"Ожидалось сообщение об ошибке: '{ERROR_MESSAGE}', "
-            f"получено: '{error_element}'"
+            f"получено: '{error_element.text}'"
         )
