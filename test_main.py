@@ -42,7 +42,9 @@ class TestLogin:
         login_button.click()
 
         error_element = WebDriverWait(browser, TIMEOUT).until(
-            lambda driver: driver.find_element(*ERROR_LOCATOR).text.strip() != ""
+            lambda driver: driver.find_element(*ERROR_LOCATOR)
+            if driver.find_element(*ERROR_LOCATOR).text.strip() != ""
+            else False
         )
 
         assert ERROR_MESSAGE in error_element.text, (
