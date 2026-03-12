@@ -1,4 +1,3 @@
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from faker import Faker
@@ -10,7 +9,6 @@ from constants import (
     SEARCH_LOCATOR, ENTRANCE_LOCATOR, NAME_LOCATOR,
     PASSWORD_LOCATOR, LOGIN_LOCATOR, ERROR_MESSAGE, ERROR_LOCATOR
 )
-
 
 fake = Faker()
 
@@ -27,23 +25,26 @@ def browser():
 
 class TestLogin:
     def test_steam(self, browser):
-        WebDriverWait(browser, TIMEOUT).until(EC.presence_of_element_located((By.XPATH, SEARCH_LOCATOR)))
+        WebDriverWait(browser, TIMEOUT).until(EC.presence_of_element_located(SEARCH_LOCATOR))
 
         button_entrance = WebDriverWait(browser, TIMEOUT).until(
-            EC.element_to_be_clickable((By.XPATH, ENTRANCE_LOCATOR)))
+            EC.element_to_be_clickable(ENTRANCE_LOCATOR))
         button_entrance.click()
 
         name_field = WebDriverWait(browser, TIMEOUT).until(
-            EC.element_to_be_clickable((By.XPATH, NAME_LOCATOR)))
+            EC.visibility_of_element_located(NAME_LOCATOR))
         name_field.send_keys(fake.name())
 
-        password_field = WebDriverWait(browser, TIMEOUT).until(EC.element_to_be_clickable((By.XPATH, PASSWORD_LOCATOR)))
+        password_field = WebDriverWait(browser, TIMEOUT).until(EC.visibility_of_element_located(PASSWORD_LOCATOR))
         password_field.send_keys(fake.password())
 
-        login_button = WebDriverWait(browser, TIMEOUT).until(EC.element_to_be_clickable((By.XPATH, LOGIN_LOCATOR)))
+        login_button = WebDriverWait(browser, TIMEOUT).until(EC.element_to_be_clickable(LOGIN_LOCATOR))
         login_button.click()
 
         error_element = WebDriverWait(browser, TIMEOUT).until(
-            EC.presence_of_element_located((By.XPATH, ERROR_LOCATOR))
+            lambda driver: driver.find_element(*ERROR_LOCATOR)
+            if ERROR_MESSAGE in driver.find_element(*ERROR_LOCATOR).text
+            else False
         )
+
         assert ERROR_MESSAGE in error_element.text
