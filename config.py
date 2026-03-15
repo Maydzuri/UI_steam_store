@@ -1,0 +1,7 @@
+BASE_URL = "https://store.steampowered.com"
+
+TIMEOUT = 20
+POLL_FREQUENCY = 0.5
+
+WINDOW_WIDTH = 1920
+WINDOW_HEIGHT = 1080
