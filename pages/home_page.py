@@ -1,27 +1,31 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from config import TIMEOUT, POLL_FREQUENCY
-from locators.home_page_locators import HomePageLocators
-from locators.search_results_page_locators import SearchResultsPageLocators
+from selenium.webdriver.common.by import By
+from ConfigReader import ConfigReader
 
+config = ConfigReader()
 
 class HomePage:
+
+    SEARCH_BOX = (By.XPATH, "//input[@role='combobox']")
+    SEARCH_BUTTON = (By.XPATH, "//button[@type='submit']")
+
     def __init__(self, driver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, TIMEOUT, POLL_FREQUENCY)
-        self.locators = HomePageLocators
+        self.wait = WebDriverWait(
+            driver,
+            config.get('TIMEOUT'),
+            config.get('POLL_FREQUENCY')
+        )
 
-    def open(self, url):
-        self.driver.get(url)
-        self.driver.delete_all_cookies()
-        self.wait.until(EC.presence_of_element_located(self.locators.SEARCH_BOX))
+    def wait_for_page_to_load(self):
+        self.wait.until(EC.presence_of_element_located(self.SEARCH_BOX))
 
     def search(self, game_name):
-        search_box = self.wait.until(EC.element_to_be_clickable(self.locators.SEARCH_BOX))
+        search_box = self.wait.until(EC.visibility_of_element_located(self.SEARCH_BOX))
         search_box.clear()
+        search_box = self.wait.until(EC.visibility_of_element_located(self.SEARCH_BOX))
         search_box.send_keys(game_name)
 
-        search_button = self.wait.until(EC.element_to_be_clickable(self.locators.SEARCH_BUTTON))
+        search_button = self.wait.until(EC.element_to_be_clickable(self.SEARCH_BUTTON))
         search_button.click()
-
-        self.wait.until(EC.presence_of_element_located(SearchResultsPageLocators.GAME_ROWS))

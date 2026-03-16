@@ -2,11 +2,11 @@ import pytest
 from browser import Browser
 
 
+_browser = Browser()
+
 @pytest.fixture(scope="function")
 def driver(request):
     language = request.node.callspec.params.get('language', 'en')
-    browser = Browser()
-    driver = browser.get_driver(language)
-    driver.delete_all_cookies()
+    driver = _browser.get_driver(language)
     yield driver
-    browser.quit()
+    _browser.quit()
