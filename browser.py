@@ -6,28 +6,43 @@ config = ConfigReader()
 
 
 class Browser:
-    _current_driver = None
+    _instance = None
+    _driver = None
     _current_language = None
 
-    def get_driver(self, language):
-        if Browser._current_driver is None or Browser._current_language != language:
-            if Browser._current_driver:
-                Browser._current_driver.quit()
-                Browser._current_driver = None
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
 
-            Browser._current_driver = self._create_driver(language)
-            Browser._current_language = language
+    @classmethod
+    def get_driver(cls, language=None):
+        if language is not None and (cls._driver is None or cls._current_language != language):
+            if cls._driver:
+                cls._driver.quit()
+                cls._driver = None
 
-        return Browser._current_driver
+            cls._driver = cls._create_driver(language)
+            cls._current_language = language
 
-    def _create_driver(self, language):
+        if cls._driver is None:
+            default_language = "en"  # можно вынести в конфиг
+            cls._driver = cls._create_driver(default_language)
+            cls._current_language = default_language
+
+        return cls._driver
+
+    @classmethod
+    def _create_driver(cls, language):
         options = Options()
         options.add_argument(f"--lang={language}")
         options.add_argument(f"--window-size={config.get('WINDOW_WIDTH')},{config.get('WINDOW_HEIGHT')}")
         return webdriver.Chrome(options=options)
 
-    def quit(self):
-        if Browser._current_driver:
-            Browser._current_driver.quit()
-            Browser._current_driver = None
-            Browser._current_language = None
+    @classmethod
+    def quit(cls):
+        if cls._driver:
+            cls._driver.quit()
+            cls._driver = None
+            cls._current_language = None
+            cls._instance = None

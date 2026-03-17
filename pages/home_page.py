@@ -2,18 +2,20 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from ConfigReader import ConfigReader
+from browser import Browser
 
 config = ConfigReader()
+
 
 class HomePage:
 
     SEARCH_BOX = (By.XPATH, "//input[@role='combobox']")
     SEARCH_BUTTON = (By.XPATH, "//button[@type='submit']")
 
-    def __init__(self, driver):
-        self.driver = driver
+    def __init__(self):
+        self.driver = Browser.get_driver()
         self.wait = WebDriverWait(
-            driver,
+            self.driver,
             config.get('TIMEOUT'),
             config.get('POLL_FREQUENCY')
         )
