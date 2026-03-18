@@ -2,7 +2,7 @@ import json
 
 
 class ConfigReader:
-    DEFAULT_CONFIG_PATH = 'config.json'  # Константа на уровне класса
+    DEFAULT_CONFIG_PATH = 'config.json'
 
     def __init__(self, config_file=None):
         if config_file is None:

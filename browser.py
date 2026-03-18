@@ -1,22 +1,22 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from enum import StrEnum
 from ConfigReader import ConfigReader
 
 config = ConfigReader()
 
 
+class Language(StrEnum):
+    RUSSIAN = "ru"
+    ENGLISH = "en"
+
+
 class Browser:
-    _instance = None
     _driver = None
     _current_language = None
 
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
-
     @classmethod
-    def get_driver(cls, language=None):
+    def get_driver(cls, language: Language = None):
         if language is not None and (cls._driver is None or cls._current_language != language):
             if cls._driver:
                 cls._driver.quit()
@@ -26,14 +26,14 @@ class Browser:
             cls._current_language = language
 
         if cls._driver is None:
-            default_language = "en"  # можно вынести в конфиг
+            default_language = Language.ENGLISH
             cls._driver = cls._create_driver(default_language)
             cls._current_language = default_language
 
         return cls._driver
 
     @classmethod
-    def _create_driver(cls, language):
+    def _create_driver(cls, language: Language):
         options = Options()
         options.add_argument(f"--lang={language}")
         options.add_argument(f"--window-size={config.get('WINDOW_WIDTH')},{config.get('WINDOW_HEIGHT')}")
@@ -45,4 +45,3 @@ class Browser:
             cls._driver.quit()
             cls._driver = None
             cls._current_language = None
-            cls._instance = None

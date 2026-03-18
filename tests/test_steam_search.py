@@ -2,17 +2,15 @@ import pytest
 from pages.home_page import HomePage
 from pages.search_results_page import SearchResultsPage
 from ConfigReader import ConfigReader
-from browser import Browser
+from browser import Language
 
 config = ConfigReader()
 
 
-@pytest.mark.parametrize("language", ["ru", "en"])
+@pytest.mark.parametrize("language", [Language.RUSSIAN, Language.ENGLISH])
 @pytest.mark.parametrize("game_name, n", [("The Witcher", 10), ("Fallout", 20)])
-def test_steam_search(language, game_name, n):
-    driver = Browser.get_driver(language)
-
-    driver.get(config.get('BASE_URL'))
+def test_steam_search(language, game_name, n, browser):
+    browser.get(config.get('BASE_URL'))
 
     home_page = HomePage()
     home_page.wait_for_page_to_load()
@@ -27,8 +25,6 @@ def test_steam_search(language, game_name, n):
 
     for i in range(len(prices) - 1):
         assert prices[i] >= prices[i + 1], \
-            f"Ошибка сортировки на позициях {i} и {i + 1}!\n" \
-            f"{prices[i]} < {prices[i + 1]}\n" \
+            f"Ошибка сортировки на позициях {i} и {i+1}!\n" \
+            f"{prices[i]} < {prices[i+1]}\n" \
             f"Все первые {n} цен: {prices}"
-
-    print(f"  ✓ СОРТИРОВКА КОРРЕКТНА: первые {n} цен: {prices}")
