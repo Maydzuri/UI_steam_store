@@ -18,7 +18,7 @@ class SearchResultsPage:
     RESULTS_CONTAINER = (By.ID, "search_result_container")
 
     def __init__(self):
-        self.driver = Browser.get_driver()
+        self.driver = Browser()
         self.wait = WebDriverWait(
             self.driver,
             config.get('TIMEOUT'),
@@ -39,10 +39,10 @@ class SearchResultsPage:
 
         self.wait.until(EC.presence_of_element_located(self.SORT_DROPDOWN_ACTIVE))
         self.wait.until(
-            lambda driver: driver.find_element(*self.RESULTS_CONTAINER).get_attribute("style")
+            lambda driver: bool(driver.find_element(*self.RESULTS_CONTAINER).get_attribute("style"))
         )
         self.wait.until(
-            lambda driver: not driver.find_element(*self.RESULTS_CONTAINER).get_attribute("style")
+            lambda driver: not bool(driver.find_element(*self.RESULTS_CONTAINER).get_attribute("style"))
         )
         self.wait.until(EC.presence_of_element_located(self.GAME_ROWS))
 

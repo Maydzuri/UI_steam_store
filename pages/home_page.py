@@ -13,7 +13,7 @@ class HomePage:
     SEARCH_BUTTON = (By.XPATH, "//button[@type='submit']")
 
     def __init__(self):
-        self.driver = Browser.get_driver()
+        self.driver = Browser()
         self.wait = WebDriverWait(
             self.driver,
             config.get('TIMEOUT'),

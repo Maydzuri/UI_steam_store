@@ -15,20 +15,21 @@ class Browser:
     _driver = None
     _current_language = None
 
-    @classmethod
-    def get_driver(cls, language: Language = None):
-        if language is not None and (cls._driver is None or cls._current_language != language):
-            if cls._driver:
-                cls._driver.quit()
-                cls._driver = None
-
+    def __new__(cls, language: Language = None):
+        if cls._driver is None:
+            if language is None:
+                language = Language.ENGLISH
             cls._driver = cls._create_driver(language)
             cls._current_language = language
+            return cls._driver
 
-        if cls._driver is None:
-            default_language = Language.ENGLISH
-            cls._driver = cls._create_driver(default_language)
-            cls._current_language = default_language
+        if language is None:
+            return cls._driver
+
+        if language != cls._current_language:
+            cls._driver.quit()
+            cls._driver = cls._create_driver(language)
+            cls._current_language = language
 
         return cls._driver
 
