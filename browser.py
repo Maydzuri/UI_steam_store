@@ -16,29 +16,29 @@ class Browser:
     _current_language = None
 
     def __new__(cls, language: Language = None):
-        if cls._driver is None:
-            if language is None:
-                language = Language.ENGLISH
-            cls._driver = cls._create_driver(language)
-            cls._current_language = language
-            return cls._driver
+        if language is None and cls._current_language is not None:
+            language = cls._current_language
 
         if language is None:
+            language = Language.ENGLISH
+
+        if cls._driver is None:
+            options = Options()
+            options.add_argument(f"--lang={language}")
+            options.add_argument(f"--window-size={config.get('WINDOW_WIDTH')},{config.get('WINDOW_HEIGHT')}")
+            cls._driver = webdriver.Chrome(options=options)
+            cls._current_language = language
             return cls._driver
 
         if language != cls._current_language:
             cls._driver.quit()
-            cls._driver = cls._create_driver(language)
+            options = Options()
+            options.add_argument(f"--lang={language}")
+            options.add_argument(f"--window-size={config.get('WINDOW_WIDTH')},{config.get('WINDOW_HEIGHT')}")
+            cls._driver = webdriver.Chrome(options=options)
             cls._current_language = language
 
         return cls._driver
-
-    @classmethod
-    def _create_driver(cls, language: Language):
-        options = Options()
-        options.add_argument(f"--lang={language}")
-        options.add_argument(f"--window-size={config.get('WINDOW_WIDTH')},{config.get('WINDOW_HEIGHT')}")
-        return webdriver.Chrome(options=options)
 
     @classmethod
     def quit(cls):
