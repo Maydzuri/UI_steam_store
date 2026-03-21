@@ -49,3 +49,8 @@ class BaseElement:
         except WebDriverException as e:
             Logger.error(f"{self}: ошибка клика - {e}")
             raise
+
+    def click_via_js(self, timeout: int = None):
+        element = self.wait_for_presence(timeout)
+        Logger.info(f"{self}: JS-клик")
+        self.browser.driver.execute_script("arguments[0].click();", element)

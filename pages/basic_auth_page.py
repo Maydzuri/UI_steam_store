@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from browser.browser import Browser
 from pages.base_page import BasePage
-from elements.text_block import TextBlock
+from elements.label import Label
 
 
 class BasicAuthPage(BasePage):
@@ -9,7 +9,7 @@ class BasicAuthPage(BasePage):
     SUCCESS_MESSAGE_LOCATOR = (By.XPATH, "//div[contains(@class, 'example')]/p")
 
     def __init__(self, browser: Browser):
-        self.success_message = TextBlock(
+        self.success_message = Label(
             browser,
             self.SUCCESS_MESSAGE_LOCATOR,
             description="Сообщение об успехе"
