@@ -18,5 +18,5 @@ class BasePage:
                 f"{self.name}: unique_element не задан. Невозможно определить момент открытия страницы."
             )
         Logger.info(f"{self}: ожидание открытия")
-        self.unique_element.wait_for_visible(timeout)
+        self.unique_element.wait_for_presence(timeout)
         Logger.info(f"{self}: открыта")

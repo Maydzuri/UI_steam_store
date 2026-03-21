@@ -1,20 +1,21 @@
 from selenium.webdriver.common.by import By
 from browser.browser import Browser
 from pages.base_page import BasePage
-from elements.base_element import BaseElement
+from elements.text_block import TextBlock
 
 
 class BasicAuthPage(BasePage):
+
+    SUCCESS_MESSAGE_LOCATOR = (By.XPATH, "//div[contains(@class, 'example')]/p")
+
     def __init__(self, browser: Browser):
-        success_message_element = BaseElement(
+        self.success_message = TextBlock(
             browser,
-            (By.XPATH, "//div[contains(@class, 'example')]/p"),
+            self.SUCCESS_MESSAGE_LOCATOR,
             description="Сообщение об успехе"
         )
 
-        super().__init__(browser, unique_element=success_message_element, name="BasicAuthPage")
-
-        self.success_message = success_message_element
+        super().__init__(browser, unique_element=self.success_message, name="BasicAuthPage")
 
     def get_success_message(self) -> str:
         return self.success_message.get_text()

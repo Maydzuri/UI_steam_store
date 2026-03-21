@@ -23,6 +23,3 @@ class Input(BaseElement):
         except WebDriverException as e:
             Logger.error(f"{self}: ошибка ввода - {e}")
             raise
-
-    def get_value(self, timeout: int = None) -> str:
-        return self.get_attribute("value", timeout)
