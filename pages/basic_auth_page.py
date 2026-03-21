@@ -1,9 +1,4 @@
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from browser.browser import Browser
-from selenium.webdriver.common.by import By
-
 from browser.browser import Browser
 from pages.base_page import BasePage
 from elements.base_element import BaseElement

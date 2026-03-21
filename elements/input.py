@@ -1,5 +1,4 @@
 from selenium.common.exceptions import WebDriverException
-
 from elements.base_element import BaseElement
 from utils.logger import Logger
 

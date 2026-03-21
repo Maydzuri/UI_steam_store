@@ -1,4 +1,3 @@
-import pytest
 from pages.basic_auth_page import BasicAuthPage
 from utils.logger import Logger
 

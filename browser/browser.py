@@ -1,7 +1,3 @@
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
-
 from browser.browser_factory import BrowserFactory, AvailableDriverName
 from utils.logger import Logger
 
