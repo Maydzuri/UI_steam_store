@@ -1,44 +1,55 @@
 import pytest
 import random
 import string
-from pages.alerts_page import AlertsPage
+from utils.logger import Logger
 
 
 class TestAlertsJS:
 
-    @pytest.fixture(autouse=True)
-    def setup(self, browser):
-        browser.get("https://the-internet.herokuapp.com/javascript_alerts")
-        self.page = AlertsPage(browser)
-        self.page.wait_for_open()
-
-    def test_js_alert_js_click(self, browser):
-        self.page.click_alert_js()
+    def test_js_alert_js_click(self, browser, alerts_page):
+        page = alerts_page
+        page.click_alert_js()
         alert_text = browser.accept_alert()
-        assert alert_text == "I am a JS Alert"
-        result = self.page.get_result_text()
-        assert result == "You successfully clicked an alert"
+        assert alert_text == "I am a JS Alert", \
+            f"Ожидался текст 'I am a JS Alert', получен '{alert_text}'"
+        result = page.get_result_text()
+        assert result == "You successfully clicked an alert", \
+            f"Ожидался результат 'You successfully clicked an alert', получен '{result}'"
 
-    def test_js_confirm_ok_js_click(self, browser):
-        self.page.click_confirm_js()
+    def test_js_confirm_ok_js_click(self, browser, alerts_page):
+        page = alerts_page
+        page.click_confirm_js()
         alert_text = browser.accept_alert()
-        assert alert_text == "I am a JS Confirm"
-        result = self.page.get_result_text()
-        assert result == "You clicked: Ok"
+        assert alert_text == "I am a JS Confirm", \
+            f"Ожидался текст 'I am a JS Confirm', получен '{alert_text}'"
+        result = page.get_result_text()
+        assert result == "You clicked: Ok", \
+            f"Ожидался результат 'You clicked: Ok', получен '{result}'"
 
-    def test_js_confirm_cancel_js_click(self, browser):
-        self.page.click_confirm_js()
+    def test_js_confirm_cancel_js_click(self, browser, alerts_page):
+        page = alerts_page
+        page.click_confirm_js()
         alert_text = browser.dismiss_alert()
-        assert alert_text == "I am a JS Confirm"
-        result = self.page.get_result_text()
-        assert result == "You clicked: Cancel"
+        assert alert_text == "I am a JS Confirm", \
+            f"Ожидался текст 'I am a JS Confirm', получен '{alert_text}'"
+        result = page.get_result_text()
+        assert result == "You clicked: Cancel", \
+            f"Ожидался результат 'You clicked: Cancel', получен '{result}'"
 
-    def test_js_prompt_js_click(self, browser):
+    def test_js_prompt_js_click(self, browser, alerts_page):
+        page = alerts_page
         random_text = ''.join(random.choices(string.ascii_letters, k=10))
-        self.page.click_prompt_js()
+        Logger.info(f"Сгенерированный текст: {random_text}")
+
+        page.click_prompt_js()
+
         alert_text = browser.wait_for_alert().text
-        assert alert_text == "I am a JS prompt"
+        assert alert_text == "I am a JS prompt", \
+            f"Ожидался текст 'I am a JS prompt', получен '{alert_text}'"
+
         browser.send_keys_to_alert(random_text)
-        result = self.page.get_result_text()
+
+        result = page.get_result_text()
         expected = f"You entered: {random_text}"
-        assert result == expected
+        assert result == expected, \
+            f"Ожидался результат '{expected}', получен '{result}'"

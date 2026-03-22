@@ -1,5 +1,3 @@
-from selenium.webdriver.common.by import By
-
 from browser.browser import Browser
 from pages.base_page import BasePage
 from elements.button import Button
@@ -8,10 +6,10 @@ from elements.label import Label
 
 class AlertsPage(BasePage):
 
-    ALERT_BUTTON = (By.XPATH, "//button[@onclick='jsAlert()']")
-    CONFIRM_BUTTON = (By.XPATH, "//button[@onclick='jsConfirm()']")
-    PROMPT_BUTTON = (By.XPATH, "//button[@onclick='jsPrompt()']")
-    RESULT_TEXT = (By.ID, "result")
+    ALERT_BUTTON = "//button[@onclick='jsAlert()']"
+    CONFIRM_BUTTON = "//button[@onclick='jsConfirm()']"
+    PROMPT_BUTTON = "//button[@onclick='jsPrompt()']"
+    RESULT_TEXT = "result"
 
     def __init__(self, browser: Browser):
         self.alert_button = Button(browser, self.ALERT_BUTTON, description="Кнопка JS Alert")

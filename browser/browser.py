@@ -1,6 +1,5 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver import ActionChains
 from browser.browser_factory import BrowserFactory, AvailableDriverName
 from utils.logger import Logger
 
@@ -56,7 +55,3 @@ class Browser:
         Logger.info(f"Ввод текста '{keys}' в алерт")
         alert.send_keys(keys)
         alert.accept()
-
-    def context_click(self, element):
-        Logger.info(f"Клик правой кнопкой мыши по элементу: {element}")
-        ActionChains(self.driver).context_click(element).perform()
