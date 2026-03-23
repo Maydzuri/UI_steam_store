@@ -70,3 +70,12 @@ class BaseElement:
         element = self.wait_for_presence(timeout)
         Logger.info(f"{self}: контекстный клик")
         ActionChains(self.browser.driver).context_click(element).perform()
+
+    def send_keys(self, keys: str, timeout: int = None):
+        element = self.wait_for_visible(timeout)
+        Logger.info(f"{self}: отправка клавиш '{keys}'")
+        try:
+            element.send_keys(keys)
+        except WebDriverException as e:
+            Logger.error(f"{self}: ошибка отправки клавиш - {e}")
+            raise
