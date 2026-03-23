@@ -84,3 +84,11 @@ class Browser:
         )
         new_handles = [h for h in self.window_handles if h not in old_handles]
         return new_handles[0]
+
+    def switch_to_frame(self, frame_reference):
+        Logger.info(f"Переключение во фрейм: {frame_reference}")
+        self.driver.switch_to.frame(frame_reference)
+
+    def switch_to_default_content(self):
+        Logger.info("Возврат в основной документ")
+        self.driver.switch_to.default_content()

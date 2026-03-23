@@ -5,6 +5,7 @@ from pages.context_menu_page import ContextMenuPage
 from pages.horizontal_slider_page import HorizontalSliderPage
 from pages.hovers_page import HoversPage
 from pages.windows_page import WindowsPage
+from pages.frames_page import FramesPage
 
 
 @pytest.fixture
@@ -49,5 +50,13 @@ def hovers_page(browser):
 def windows_page(browser):
     browser.get("https://the-internet.herokuapp.com/windows")
     page = WindowsPage(browser)
+    page.wait_for_open()
+    return page
+
+
+@pytest.fixture
+def frames_page(browser):
+    browser.get("https://demoqa.com/frames")
+    page = FramesPage(browser)
     page.wait_for_open()
     return page
