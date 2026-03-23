@@ -55,3 +55,7 @@ class Browser:
         Logger.info(f"Ввод текста '{keys}' в алерт")
         alert.send_keys(keys)
         alert.accept()
+
+    def back(self):
+        Logger.info("Возврат на предыдущую страницу")
+        self.driver.back()

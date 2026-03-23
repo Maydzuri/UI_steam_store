@@ -1,6 +1,4 @@
-import pytest
 import random
-
 from utils.logger import Logger
 
 

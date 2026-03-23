@@ -1,7 +1,6 @@
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 import time
-
 from browser.browser import Browser
 from pages.base_page import BasePage
 from elements.slider import Slider
