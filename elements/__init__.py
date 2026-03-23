@@ -4,3 +4,4 @@ from .input import Input
 from .label import Label
 from .hot_spot import HotSpot
 from .slider import Slider
+from .user_card import UserCard

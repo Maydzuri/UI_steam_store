@@ -5,22 +5,23 @@ from selenium.webdriver.support import expected_conditions as EC
 from browser.browser import Browser
 from pages.base_page import BasePage
 from elements.base_element import BaseElement
+from elements.user_card import UserCard
 from utils.logger import Logger
 
 
 class HoversPage(BasePage):
 
     USER_CARDS = "//div[contains(@class, 'figure')]"
-    USER_NAME = "//h5"
-    PROFILE_LINK = "//a"
+    USER_NAME = ".//h5"
+    PROFILE_LINK = ".//a"
 
     def __init__(self, browser: Browser):
-        first_card = BaseElement(browser, "//div[@class='figure']", description="Первая карточка пользователя")
+        first_card = UserCard(browser, self.USER_CARDS, description="Первая карточка пользователя")
         super().__init__(browser, unique_element=first_card, name="HoversPage")
 
     def _get_user_card(self, index: int):
         locator = f"({self.USER_CARDS})[{index + 1}]"
-        return BaseElement(self.browser, locator, description=f"Карточка пользователя {index + 1}")
+        return UserCard(self.browser, locator, description=f"Карточка пользователя {index + 1}")
 
     def hover_over_user(self, index: int):
         card = self._get_user_card(index)
