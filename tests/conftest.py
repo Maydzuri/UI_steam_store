@@ -4,6 +4,7 @@ from pages.alerts_page import AlertsPage
 from pages.context_menu_page import ContextMenuPage
 from pages.horizontal_slider_page import HorizontalSliderPage
 from pages.hovers_page import HoversPage
+from pages.windows_page import WindowsPage
 
 
 @pytest.fixture
@@ -40,5 +41,13 @@ def slider_page(browser):
 def hovers_page(browser):
     browser.get("https://the-internet.herokuapp.com/hovers")
     page = HoversPage(browser)
+    page.wait_for_open()
+    return page
+
+
+@pytest.fixture
+def windows_page(browser):
+    browser.get("https://the-internet.herokuapp.com/windows")
+    page = WindowsPage(browser)
     page.wait_for_open()
     return page

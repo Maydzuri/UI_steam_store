@@ -59,3 +59,28 @@ class Browser:
     def back(self):
         Logger.info("Возврат на предыдущую страницу")
         self.driver.back()
+
+    @property
+    def window_handles(self):
+        return self.driver.window_handles
+
+    @property
+    def current_window_handle(self):
+        return self.driver.current_window_handle
+
+    def switch_to_window(self, handle):
+        Logger.info(f"Переключение на вкладку {handle}")
+        self.driver.switch_to.window(handle)
+
+    def close_current_window(self):
+        Logger.info("Закрытие текущей вкладки")
+        self.driver.close()
+
+    def wait_for_new_window(self, old_handles, timeout: int = None):
+        timeout = timeout or self.DEFAULT_TIMEOUT
+        Logger.info(f"Ожидание появления новой вкладки (было {len(old_handles)} вкладок)")
+        WebDriverWait(self.driver, timeout).until(
+            lambda d: len(d.window_handles) > len(old_handles)
+        )
+        new_handles = [h for h in self.window_handles if h not in old_handles]
+        return new_handles[0]
