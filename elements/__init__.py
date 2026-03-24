@@ -4,3 +4,4 @@ from .input import Input
 from .label import Label
 from .slider import Slider
 from .web_element import WebElement
+from .multi_web_element import MultiWebElement

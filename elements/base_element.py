@@ -69,14 +69,6 @@ class BaseElement:
         Logger.info(f"{self}: контекстный клик")
         ActionChains(self.browser.driver).context_click(element).perform()
 
-    def is_exists(self, timeout: int = None) -> bool:
-        timeout = timeout or self.browser.DEFAULT_TIMEOUT
-        try:
-            self.wait_for_presence(timeout)
-            return True
-        except TimeoutException:
-            return False
-
     def get_attribute(self, name: str, timeout: int = None) -> str:
         element = self.wait_for_presence(timeout)
         Logger.info(f"{self}: получение атрибута '{name}'")
@@ -88,10 +80,24 @@ class BaseElement:
             Logger.error(f"{self}: ошибка получения атрибута - {e}")
             raise
 
-    def wait_for_all_visible(self, timeout: int = None) -> list:
+    def is_exists(self, timeout: int = 1) -> bool:
+        try:
+            self.wait_for_presence(timeout)
+            return True
+        except TimeoutException:
+            return False
+        except Exception as e:
+            Logger.error(f"{self}: ошибка при проверке существования - {e}")
+            return False
+
+    def _find_element(self, timeout: int = None):
         timeout = timeout or self.browser.DEFAULT_TIMEOUT
-        Logger.info(f"{self}: ожидание видимости всех элементов")
-        elements = WebDriverWait(self.browser.driver, timeout).until(
-            EC.visibility_of_all_elements_located(self.locator)
-        )
-        return elements
+        try:
+            Logger.info(f"{self}: поиск элемента")
+            element = WebDriverWait(self.browser.driver, timeout).until(
+                EC.presence_of_element_located(self.locator)
+            )
+            return element
+        except TimeoutException:
+            Logger.error(f"{self}: элемент не найден за {timeout}с")
+            raise

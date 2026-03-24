@@ -1,10 +1,9 @@
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import WebDriverException
-from elements.base_element import BaseElement
+from elements.input import Input
 from utils.logger import Logger
 
 
-class Slider(BaseElement):
+class Slider(Input):
 
     def get_min(self) -> float:
         return float(self.get_attribute("min"))
@@ -27,15 +26,6 @@ class Slider(BaseElement):
         steps = int((value - current) / step)
         key = Keys.RIGHT if steps > 0 else Keys.LEFT
 
-        self.click()  # даём фокус
+        self.click()
         self.send_keys(key * abs(steps))
         Logger.info(f"Установлено значение {value} (было {current}, шагов {abs(steps)})")
-
-    def send_keys(self, keys: str, timeout: int = None):
-        element = self.wait_for_visible(timeout)
-        Logger.info(f"{self}: отправка клавиш '{keys}'")
-        try:
-            element.send_keys(keys)
-        except WebDriverException as e:
-            Logger.error(f"{self}: ошибка отправки клавиш - {e}")
-            raise
