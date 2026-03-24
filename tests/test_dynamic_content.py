@@ -1,10 +1,9 @@
-import pytest
 from utils.logger import Logger
 
 
 class TestDynamicContent:
 
-    def test_dynamic_content(self, dynamic_content_page):
+    def test_dynamic_content(self, dynamic_content_page, browser):
         page = dynamic_content_page
         MAX_REFRESHES = 20
 
@@ -15,6 +14,7 @@ class TestDynamicContent:
                 Logger.info(f"Найдено совпадение изображений после {attempt} обновлений")
                 return
 
-            page.refresh_page()
+            browser.refresh()  # ← обновление через браузер
+            page.wait_for_open()
 
-        pytest.fail(f"Не найдено совпадений изображений после {MAX_REFRESHES} обновлений")
+        raise AssertionError(f"Не найдено совпадений изображений после {MAX_REFRESHES} обновлений")

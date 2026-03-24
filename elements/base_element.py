@@ -44,8 +44,8 @@ class BaseElement:
         return self._wait_for(EC.element_to_be_clickable, timeout)
 
     def get_text(self, timeout: int = None) -> str:
-        Logger.info(f"{self}: получение текста")
         element = self.wait_for_presence(timeout)
+        Logger.info(f"{self}: получение текста")
         text = element.text.strip()
         Logger.info(f"{self}: текст = '{text}'")
         return text
@@ -69,16 +69,8 @@ class BaseElement:
         Logger.info(f"{self}: контекстный клик")
         ActionChains(self.browser.driver).context_click(element).perform()
 
-    def send_keys(self, keys: str, timeout: int = None):
-        element = self.wait_for_visible(timeout)
-        Logger.info(f"{self}: отправка клавиш '{keys}'")
-        try:
-            element.send_keys(keys)
-        except WebDriverException as e:
-            Logger.error(f"{self}: ошибка отправки клавиш - {e}")
-            raise
-
-    def is_exists(self, timeout: int = 1) -> bool:
+    def is_exists(self, timeout: int = None) -> bool:
+        timeout = timeout or self.browser.DEFAULT_TIMEOUT
         try:
             self.wait_for_presence(timeout)
             return True
@@ -95,3 +87,11 @@ class BaseElement:
         except WebDriverException as e:
             Logger.error(f"{self}: ошибка получения атрибута - {e}")
             raise
+
+    def wait_for_all_visible(self, timeout: int = None) -> list:
+        timeout = timeout or self.browser.DEFAULT_TIMEOUT
+        Logger.info(f"{self}: ожидание видимости всех элементов")
+        elements = WebDriverWait(self.browser.driver, timeout).until(
+            EC.visibility_of_all_elements_located(self.locator)
+        )
+        return elements

@@ -3,5 +3,4 @@ from .button import Button
 from .input import Input
 from .label import Label
 from .slider import Slider
-from .body import Body
 from .web_element import WebElement

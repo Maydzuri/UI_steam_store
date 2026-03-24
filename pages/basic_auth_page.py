@@ -6,7 +6,7 @@ from elements.label import Label
 
 class BasicAuthPage(BasePage):
 
-    SUCCESS_MESSAGE_LOCATOR = (By.XPATH, "//div[contains(@class, 'example')]/p")
+    SUCCESS_MESSAGE_LOCATOR = "//div[contains(@class, 'example')]/p"
 
     def __init__(self, browser: Browser):
         self.success_message = Label(

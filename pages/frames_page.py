@@ -1,8 +1,8 @@
 from browser.browser import Browser
 from pages.base_page import BasePage
 from elements.button import Button
-from elements.body import Body
 from elements.web_element import WebElement
+from elements.label import Label
 
 
 class FramesPage(BasePage):
@@ -24,12 +24,12 @@ class FramesPage(BasePage):
         super().__init__(browser, unique_element=unique, name="FramesPage")
 
         self.parent_frame_element = WebElement(browser, self.PARENT_FRAME_LOCATOR, description="Родительский фрейм")
-        self.parent_text = Body(browser, self.PARENT_FRAME_TEXT, description="Parent frame")
-        self.child_text = Body(browser, self.CHILD_FRAME_TEXT, description="Child Iframe")
+        self.parent_text = Label(browser, self.PARENT_FRAME_TEXT, description="Parent frame")
+        self.child_text = Label(browser, self.CHILD_FRAME_TEXT, description="Child Iframe")
 
         self.top_frame = WebElement(browser, self.TOP_FRAME_LOCATOR, description="Верхний фрейм")
         self.bottom_frame = WebElement(browser, self.BOTTOM_FRAME_LOCATOR, description="Нижний фрейм")
-        self.body = Body(browser, self.BODY_LOCATOR, description="Текст внутри фрейма")
+        self.body = Label(browser, self.BODY_LOCATOR, description="Текст внутри фрейма")
 
     def click_nested_frames(self):
         self.nested_frames_button.click()
