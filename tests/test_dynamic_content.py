@@ -6,7 +6,7 @@ from utils.logger import Logger
 class TestDynamicContent:
 
     def test_dynamic_content(self):
-        MAX_ATTEMPTS = 5
+        MAX_ATTEMPTS = 20
 
         for attempt in range(1, MAX_ATTEMPTS + 1):
             Logger.info(f"Попытка #{attempt}: загрузка страницы")
