@@ -6,4 +6,5 @@ from .horizontal_slider_page import HorizontalSliderPage
 from .hovers_page import HoversPage
 from .windows_page import WindowsPage
 from .frames_page import FramesPage
+from .dynamic_content_page import DynamicContentPage
 

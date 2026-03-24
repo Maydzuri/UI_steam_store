@@ -102,3 +102,7 @@ class Browser:
         WebDriverWait(self.driver, timeout).until(
             lambda d: d.current_url == expected_url
         )
+
+    def refresh(self):
+        Logger.info("Обновление страницы")
+        self.driver.refresh()

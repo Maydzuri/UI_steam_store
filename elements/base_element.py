@@ -3,12 +3,11 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, WebDriverException
-from browser.browser import Browser
 from utils.logger import Logger
 
 
 class BaseElement:
-    def __init__(self, browser: Browser, locator, description: str = ""):
+    def __init__(self, browser, locator, description: str = ""):
         self.browser = browser
         self.description = description or str(locator)
 

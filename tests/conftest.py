@@ -6,6 +6,7 @@ from pages.horizontal_slider_page import HorizontalSliderPage
 from pages.hovers_page import HoversPage
 from pages.windows_page import WindowsPage
 from pages.frames_page import FramesPage
+from pages.dynamic_content_page import DynamicContentPage
 
 
 @pytest.fixture
@@ -58,5 +59,12 @@ def windows_page(browser):
 def frames_page(browser):
     browser.get("https://demoqa.com/frames")
     page = FramesPage(browser)
+    page.wait_for_open()
+    return page
+
+@pytest.fixture
+def dynamic_content_page(browser):
+    browser.get("https://the-internet.herokuapp.com/dynamic_content")
+    page = DynamicContentPage(browser)
     page.wait_for_open()
     return page
