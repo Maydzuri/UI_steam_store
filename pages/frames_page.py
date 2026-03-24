@@ -1,28 +1,35 @@
-from selenium.common.exceptions import TimeoutException, NoSuchFrameException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from browser.browser import Browser
 from pages.base_page import BasePage
 from elements.button import Button
 from elements.body import Body
+from elements.web_element import WebElement
 
 
 class FramesPage(BasePage):
 
     NESTED_FRAMES = "//span[text()='Nested Frames']"
     FRAMES = "//span[text()='Frames']"
-    PARENT_FRAME = "frame1"
+    PARENT_FRAME_LOCATOR = "frame1"
+    CHILD_FRAME_LOCATOR = ".//iframe"
     PARENT_FRAME_TEXT = "//body[contains(text(), 'Parent frame')]"
     CHILD_FRAME_TEXT = "//p[contains(text(), 'Child Iframe')]"
-    TOP_FRAME = "frame1"
-    BOTTOM_FRAME = "frame2"
+    TOP_FRAME_LOCATOR = "frame1"
+    BOTTOM_FRAME_LOCATOR = "frame2"
+    BODY_LOCATOR = "//body"
 
     def __init__(self, browser: Browser):
         self.nested_frames_button = Button(browser, self.NESTED_FRAMES, description="Пункт меню 'Nested Frames'")
         self.frames_button = Button(browser, self.FRAMES, description="Пункт меню 'Frames'")
         unique = Button(browser, self.NESTED_FRAMES, description="Пункт меню 'Nested Frames'")
         super().__init__(browser, unique_element=unique, name="FramesPage")
+
+        self.parent_frame_element = WebElement(browser, self.PARENT_FRAME_LOCATOR, description="Родительский фрейм")
+        self.parent_text = Body(browser, self.PARENT_FRAME_TEXT, description="Parent frame")
+        self.child_text = Body(browser, self.CHILD_FRAME_TEXT, description="Child Iframe")
+
+        self.top_frame = WebElement(browser, self.TOP_FRAME_LOCATOR, description="Верхний фрейм")
+        self.bottom_frame = WebElement(browser, self.BOTTOM_FRAME_LOCATOR, description="Нижний фрейм")
+        self.body = Body(browser, self.BODY_LOCATOR, description="Текст внутри фрейма")
 
     def click_nested_frames(self):
         self.nested_frames_button.click()
@@ -31,49 +38,39 @@ class FramesPage(BasePage):
         self.frames_button.click()
 
     def is_parent_frame_present(self) -> bool:
-        try:
-            self.browser.switch_to_frame(self.PARENT_FRAME)
-            element = Body(self.browser, self.PARENT_FRAME_TEXT, description="Parent frame")
-            element.wait_for_visible()
-            self.browser.switch_to_default_content()
-            return True
-        except TimeoutException:
-            self.browser.switch_to_default_content()
+        if not self.parent_frame_element.is_exists():
             return False
+
+        self.browser.switch_to_frame(self.parent_frame_element)
+        is_present = self.parent_text.is_exists()
+        self.browser.switch_to_default_content()
+        return is_present
 
     def is_child_frame_present(self) -> bool:
-        try:
-            self.browser.switch_to_frame(self.PARENT_FRAME)
+        if not self.parent_frame_element.is_exists():
+            return False
 
-            child_iframe = WebDriverWait(self.browser.driver, self.browser.DEFAULT_TIMEOUT).until(
-                EC.presence_of_element_located((By.TAG_NAME, "iframe"))
-            )
-            self.browser.switch_to_frame(child_iframe)
+        self.browser.switch_to_frame(self.parent_frame_element)
 
-            element = Body(self.browser, self.CHILD_FRAME_TEXT, description="Child Iframe")
-            element.wait_for_visible()
-            self.browser.switch_to_default_content()
-            return True
-        except (TimeoutException, NoSuchFrameException):
+        child_frame = WebElement(self.browser, self.CHILD_FRAME_LOCATOR, description="Дочерний фрейм")
+        if not child_frame.is_exists():
             self.browser.switch_to_default_content()
             return False
 
-    def switch_to_top_frame(self):
-        self.browser.switch_to_frame(self.TOP_FRAME)
+        self.browser.switch_to_frame(child_frame.wait_for_presence())
 
-    def switch_to_bottom_frame(self):
-        self.browser.switch_to_frame(self.BOTTOM_FRAME)
+        is_present = self.child_text.is_exists()
+        self.browser.switch_to_default_content()
+        return is_present
 
     def get_top_frame_text(self) -> str:
-        self.switch_to_top_frame()
-        body = Body(self.browser, "//body", description="Текст верхнего фрейма")
-        text = body.get_text()
+        self.browser.switch_to_frame(self.top_frame)
+        text = self.body.get_text()
         self.browser.switch_to_default_content()
         return text
 
     def get_bottom_frame_text(self) -> str:
-        self.switch_to_bottom_frame()
-        body = Body(self.browser, "//body", description="Текст нижнего фрейма")
-        text = body.get_text()
+        self.browser.switch_to_frame(self.bottom_frame)
+        text = self.body.get_text()
         self.browser.switch_to_default_content()
         return text

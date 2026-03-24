@@ -7,7 +7,18 @@ class TestHorizontalSlider:
     def test_slider_set_value(self, slider_page):
         page = slider_page
 
-        possible_values = [x * 0.5 for x in range(1, 10)]
+        min_val = page.slider.get_min()
+        max_val = page.slider.get_max()
+        step = page.slider.get_step()
+
+        possible_values = []
+        val = min_val
+        while val <= max_val:
+            possible_values.append(val)
+            val += step
+
+        possible_values = [v for v in possible_values if v not in (min_val, max_val)]
+
         target = random.choice(possible_values)
         Logger.info(f"Целевое значение: {target}")
 

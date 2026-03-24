@@ -4,41 +4,50 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from browser.browser import Browser
 from pages.base_page import BasePage
-from elements.base_element import BaseElement
-from elements.user_card import UserCard
+from elements.label import Label
+from elements.web_element import WebElement
 from utils.logger import Logger
 
 
 class HoversPage(BasePage):
-
     USER_CARDS = "//div[contains(@class, 'figure')]"
-    USER_NAME = ".//h5"
-    PROFILE_LINK = ".//a"
+    USER_NAME_TEMPLATE = "({})[{}]//h5"
+    PROFILE_LINK_TEMPLATE = "({})[{}]//a"
+    PAGE_TITLE = "//h3[text()='Hovers']"
 
     def __init__(self, browser: Browser):
-        first_card = UserCard(browser, self.USER_CARDS, description="Первая карточка пользователя")
-        super().__init__(browser, unique_element=first_card, name="HoversPage")
+        title_element = Label(browser, self.PAGE_TITLE, description="Заголовок страницы")
+        super().__init__(browser, unique_element=title_element, name="HoversPage")
 
     def _get_user_card(self, index: int):
         locator = f"({self.USER_CARDS})[{index + 1}]"
-        return UserCard(self.browser, locator, description=f"Карточка пользователя {index + 1}")
+        return WebElement(self.browser, locator, description=f"Карточка пользователя {index + 1}")
 
-    def hover_over_user(self, index: int):
+    def _get_name_locator(self, index: int) -> str:
+        return self.USER_NAME_TEMPLATE.format(self.USER_CARDS, index + 1)
+
+    def _get_link_locator(self, index: int) -> str:
+        return self.PROFILE_LINK_TEMPLATE.format(self.USER_CARDS, index + 1)
+
+    def hover_over_user(self, index: int, timeout: int = None):
         card = self._get_user_card(index)
-        element = card.wait_for_visible()
+        element = card.wait_for_visible(timeout)
         Logger.info(f"Наведение на карточку пользователя {index + 1}")
         ActionChains(self.browser.driver).move_to_element(element).perform()
-        WebDriverWait(self.browser.driver, 2).until(
-            EC.visibility_of_element_located((By.XPATH, f"({self.USER_CARDS})[{index + 1}]//h5"))
+
+        timeout = timeout or self.browser.DEFAULT_TIMEOUT
+        name_locator = self._get_name_locator(index)
+        WebDriverWait(self.browser.driver, timeout).until(
+            EC.visibility_of_element_located((By.XPATH, name_locator))
         )
 
     def get_user_name(self, index: int) -> str:
-        name_element = BaseElement(self.browser, f"({self.USER_CARDS})[{index + 1}]//h5", description=f"Имя пользователя {index + 1}")
+        name_locator = self._get_name_locator(index)
+        name_element = Label(self.browser, name_locator, description=f"Имя пользователя {index + 1}")
         return name_element.get_text()
 
     def click_profile_link(self, index: int):
-        link_locator = f"({self.USER_CARDS})[{index + 1}]//a"
-        link = BaseElement(self.browser, link_locator, description=f"Ссылка профиля {index + 1}")
+        link_locator = self._get_link_locator(index)
+        link = WebElement(self.browser, link_locator, description=f"Ссылка профиля {index + 1}")
         Logger.info(f"Клик по ссылке профиля пользователя {index + 1}")
-        link.wait_for_clickable()
         link.click()

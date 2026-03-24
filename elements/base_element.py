@@ -3,7 +3,6 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, WebDriverException
-
 from browser.browser import Browser
 from utils.logger import Logger
 
@@ -47,7 +46,7 @@ class BaseElement:
 
     def get_text(self, timeout: int = None) -> str:
         Logger.info(f"{self}: получение текста")
-        element = self.wait_for_visible(timeout)
+        element = self.wait_for_presence(timeout)
         text = element.text.strip()
         Logger.info(f"{self}: текст = '{text}'")
         return text
@@ -67,7 +66,7 @@ class BaseElement:
         self.browser.driver.execute_script("arguments[0].click();", element)
 
     def context_click(self, timeout: int = None):
-        element = self.wait_for_presence(timeout)
+        element = self.wait_for_visible(timeout)
         Logger.info(f"{self}: контекстный клик")
         ActionChains(self.browser.driver).context_click(element).perform()
 
@@ -78,4 +77,22 @@ class BaseElement:
             element.send_keys(keys)
         except WebDriverException as e:
             Logger.error(f"{self}: ошибка отправки клавиш - {e}")
+            raise
+
+    def is_exists(self, timeout: int = 1) -> bool:
+        try:
+            self.wait_for_presence(timeout)
+            return True
+        except TimeoutException:
+            return False
+
+    def get_attribute(self, name: str, timeout: int = None) -> str:
+        element = self.wait_for_presence(timeout)
+        Logger.info(f"{self}: получение атрибута '{name}'")
+        try:
+            value = element.get_attribute(name)
+            Logger.info(f"{self}: атрибут '{name}' = '{value}'")
+            return value
+        except WebDriverException as e:
+            Logger.error(f"{self}: ошибка получения атрибута - {e}")
             raise

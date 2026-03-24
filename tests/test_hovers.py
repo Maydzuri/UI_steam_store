@@ -1,5 +1,3 @@
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common.exceptions import TimeoutException
 from utils.logger import Logger
 
 
@@ -21,17 +19,7 @@ class TestHovers:
             page.click_profile_link(i)
 
             expected_url = f"https://the-internet.herokuapp.com/users/{i + 1}"
-            try:
-                WebDriverWait(browser.driver, 5).until(
-                    lambda d: d.current_url == expected_url
-                )
-            except TimeoutException:
-                raise AssertionError(
-                    f"Ожидался URL '{expected_url}', но за 5с он не появился. Текущий URL: '{browser.current_url}'"
-                )
-
-            assert browser.current_url == expected_url, \
-                f"Ожидался URL '{expected_url}', получен '{browser.current_url}'"
+            browser.wait_for_url(expected_url)
 
             browser.back()
             page.wait_for_open()

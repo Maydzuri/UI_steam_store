@@ -2,6 +2,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from browser.browser_factory import BrowserFactory, AvailableDriverName
 from utils.logger import Logger
+from elements.base_element import BaseElement
 
 
 class Browser:
@@ -54,6 +55,7 @@ class Browser:
         alert = self.wait_for_alert(timeout)
         Logger.info(f"Ввод текста '{keys}' в алерт")
         alert.send_keys(keys)
+        Logger.info("Принятие алерта после ввода текста")
         alert.accept()
 
     def back(self):
@@ -80,15 +82,23 @@ class Browser:
         timeout = timeout or self.DEFAULT_TIMEOUT
         Logger.info(f"Ожидание появления новой вкладки (было {len(old_handles)} вкладок)")
         WebDriverWait(self.driver, timeout).until(
-            lambda d: len(d.window_handles) > len(old_handles)
+            EC.new_window_is_opened(old_handles)
         )
         new_handles = [h for h in self.window_handles if h not in old_handles]
         return new_handles[0]
 
-    def switch_to_frame(self, frame_reference):
-        Logger.info(f"Переключение во фрейм: {frame_reference}")
-        self.driver.switch_to.frame(frame_reference)
+    def switch_to_frame(self, frame_element: BaseElement, timeout: int = None):
+        Logger.info(f"Переключение во фрейм: {frame_element}")
+        element = frame_element.wait_for_presence(timeout)
+        self.driver.switch_to.frame(element)
 
     def switch_to_default_content(self):
         Logger.info("Возврат в основной документ")
         self.driver.switch_to.default_content()
+
+    def wait_for_url(self, expected_url: str, timeout: int = None):
+        timeout = timeout or self.DEFAULT_TIMEOUT
+        Logger.info(f"Ожидание URL: {expected_url}")
+        WebDriverWait(self.driver, timeout).until(
+            lambda d: d.current_url == expected_url
+        )

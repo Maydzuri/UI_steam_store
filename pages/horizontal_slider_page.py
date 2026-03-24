@@ -1,14 +1,13 @@
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-import time
 from browser.browser import Browser
 from pages.base_page import BasePage
 from elements.slider import Slider
 from elements.label import Label
-from utils.logger import Logger
+
 
 
 class HorizontalSliderPage(BasePage):
+
     SLIDER_LOCATOR = "//input[@type='range']"
     VALUE_LOCATOR = "range"
 
@@ -26,22 +25,9 @@ class HorizontalSliderPage(BasePage):
         if abs(current - value) < 0.01:
             return
 
-        step = 0.5
+        step = float(self.slider.get_attribute("step"))
         steps = int((value - current) / step)
         key = Keys.RIGHT if steps > 0 else Keys.LEFT
 
-        self.slider.send_keys("")
-        time.sleep(0.2)
-
-        for _ in range(abs(steps)):
-            self.slider.send_keys(key)
-            time.sleep(0.1)
-
-        self.wait_for_value(value)
-
-    def wait_for_value(self, expected_value: float, timeout: int = None):
-        timeout = timeout or 10
-        Logger.info(f"Ожидание значения {expected_value}")
-        WebDriverWait(self.browser.driver, timeout).until(
-            lambda d: abs(self.get_current_value() - expected_value) < 0.01
-        )
+        self.slider.click()
+        self.slider.send_keys(key * abs(steps))
