@@ -7,6 +7,7 @@ from pages.hovers_page import HoversPage
 from pages.windows_page import WindowsPage
 from pages.frames_page import FramesPage
 from pages.dynamic_content_page import DynamicContentPage
+from pages.infinite_scroll_page import InfiniteScrollPage
 
 
 @pytest.fixture
@@ -66,5 +67,12 @@ def frames_page(browser):
 def dynamic_content_page(browser):
     browser.get("https://the-internet.herokuapp.com/dynamic_content")
     page = DynamicContentPage(browser)
+    page.wait_for_open()
+    return page
+
+@pytest.fixture
+def infinite_scroll_page(browser):
+    browser.get("https://the-internet.herokuapp.com/infinite_scroll")
+    page = InfiniteScrollPage(browser)
     page.wait_for_open()
     return page
