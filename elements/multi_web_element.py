@@ -1,31 +1,48 @@
-from typing import List
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from typing_extensions import Self
+
 from elements.web_element import WebElement
 from utils.logger import Logger
 
 
 class MultiWebElement:
-    def __init__(self, browser, locator: str, description: str = ""):
+    DEFAULT_TIMEOUT = 10
+
+    def __init__(
+        self,
+        browser,
+        formattable_xpath: str,
+        description: str = None,
+        timeout: int = None,
+    ) -> None:
+        self.index = 1
         self.browser = browser
-        self.locator = locator
-        self.description = description or locator
+        self.formattable_xpath = formattable_xpath
+        self.timeout = timeout if timeout is not None else self.DEFAULT_TIMEOUT
+        self.description = description if description else self.formattable_xpath.format("'i'")
 
-    def __str__(self):
-        return f"{self.__class__.__name__}({self.description})"
+    def __iter__(self) -> Self:
+        self.index = 1
+        return self
 
-    def wait_for_all_visible(self, timeout: int = None) -> List[WebElement]:
-        timeout = timeout or self.browser.DEFAULT_TIMEOUT
-        Logger.info(f"{self}: ожидание видимости всех элементов")
+    def __next__(self) -> WebElement:
+        try:
+            current_element = WebElement(
+                self.browser,
+                self.formattable_xpath.format(self.index),
+                f"{self.description}{self.index}",
+            )
+        except Exception as e:
+            Logger.error(f"Ошибка при создании элемента {self.index}: {e}")
+            raise StopIteration
 
-        raw_elements = WebDriverWait(self.browser.driver, timeout).until(
-            EC.visibility_of_all_elements_located((By.XPATH, self.locator))
-        )
+        if not current_element.is_exists(timeout=1):
+            raise StopIteration
+        else:
+            self.index += 1
+            return current_element
 
-        wrapped = []
-        for i, raw in enumerate(raw_elements):
-            wrapped.append(WebElement(self.browser, raw, description=f"{self.description}[{i}]"))
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}{self.description}"
 
-        Logger.info(f"Найдено {len(wrapped)} видимых элементов")
-        return wrapped
+    def __repr__(self) -> str:
+        return str(self)

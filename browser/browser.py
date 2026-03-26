@@ -103,13 +103,6 @@ class Browser:
             lambda d: d.current_url == expected_url
         )
 
-    def refresh(self):
-        Logger.info("Обновление страницы через JS")
-        try:
-            self.driver.execute_script("location.reload();")
-        except Exception as e:
-            Logger.error(f"Ошибка при обновлении через JS: {e}")
-            self.driver.refresh()
 
     def wait_for_page_load(self, timeout: int = None):
         timeout = timeout or self.DEFAULT_TIMEOUT
@@ -118,18 +111,11 @@ class Browser:
             lambda d: d.execute_script("return document.readyState") == "complete"
         )
 
-    def wait_for_window_stable(self, timeout: int = None):
-        timeout = timeout or self.DEFAULT_TIMEOUT
-        Logger.info("Ожидание стабильности окна")
-        WebDriverWait(self.driver, timeout).until(
-            lambda d: d.current_window_handle is not None
-        )
-
-    def clear_cache(self):
-        Logger.info("Очистка кэша")
-        self.driver.execute_script("window.localStorage.clear();")
-        self.driver.execute_script("window.sessionStorage.clear();")
 
     def execute_script(self, script: str, *args):
         Logger.info(f"Выполнение JS скрипта")
         return self.driver.execute_script(script, *args)
+
+    def refresh(self):
+        Logger.info("Обновление страницы")
+        self.driver.refresh()

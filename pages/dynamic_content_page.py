@@ -7,7 +7,7 @@ from utils.logger import Logger
 
 
 class DynamicContentPage(BasePage):
-    IMAGES = "//div[contains(@class, 'large-2 columns')]/img"
+    IMAGES = "(//div[contains(@class, 'large-2 columns')]//img)[{}]"
     PAGE_TITLE = "//h3[text()='Dynamic Content']"
 
     def __init__(self, browser: Browser):
@@ -18,8 +18,9 @@ class DynamicContentPage(BasePage):
     def get_image_srcs(self) -> list:
         try:
             self.wait_for_open()
-            images = self.images.wait_for_all_visible()
-            srcs = [img.get_attribute("src") for img in images]
+            srcs = []
+            for img in self.images:
+                srcs.append(img.get_attribute("src"))
             Logger.info(f"Получены src изображений: {srcs}")
             return srcs
         except NoSuchWindowException:

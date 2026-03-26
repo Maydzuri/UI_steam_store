@@ -80,7 +80,8 @@ class BaseElement:
             Logger.error(f"{self}: ошибка получения атрибута - {e}")
             raise
 
-    def is_exists(self, timeout: int = 1) -> bool:
+    def is_exists(self, timeout: int = None) -> bool:
+        timeout = timeout or self.browser.DEFAULT_TIMEOUT
         try:
             self.wait_for_presence(timeout)
             return True
@@ -89,15 +90,3 @@ class BaseElement:
         except Exception as e:
             Logger.error(f"{self}: ошибка при проверке существования - {e}")
             return False
-
-    def _find_element(self, timeout: int = None):
-        timeout = timeout or self.browser.DEFAULT_TIMEOUT
-        try:
-            Logger.info(f"{self}: поиск элемента")
-            element = WebDriverWait(self.browser.driver, timeout).until(
-                EC.presence_of_element_located(self.locator)
-            )
-            return element
-        except TimeoutException:
-            Logger.error(f"{self}: элемент не найден за {timeout}с")
-            raise
