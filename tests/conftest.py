@@ -9,6 +9,7 @@ from pages.frames_page import FramesPage
 from pages.dynamic_content_page import DynamicContentPage
 from pages.infinite_scroll_page import InfiniteScrollPage
 from pages.upload_page import UploadPage
+from pages.upload_dialog_page import UploadDialogPage
 
 
 @pytest.fixture
@@ -82,5 +83,12 @@ def infinite_scroll_page(browser):
 def upload_page(browser):
     browser.get("https://the-internet.herokuapp.com/upload")
     page = UploadPage(browser)
+    page.wait_for_open()
+    return page
+
+@pytest.fixture
+def upload_dialog_page(browser):
+    browser.get("https://the-internet.herokuapp.com/upload")
+    page = UploadDialogPage(browser)
     page.wait_for_open()
     return page
