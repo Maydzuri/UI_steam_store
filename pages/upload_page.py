@@ -39,7 +39,6 @@ class UploadPage(BasePage):
     def upload_via_dialog(self, file_path: str):
         Logger.info(f"Загрузка через диалог: {file_path}")
         self.drop_zone.click()
-        time.sleep(1)
         PyAutoGUIUtilities.upload_file(file_path)
 
     def upload_via_drag_and_drop(self, file_path: str):
