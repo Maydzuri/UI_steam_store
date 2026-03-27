@@ -119,3 +119,7 @@ class Browser:
     def refresh(self):
         Logger.info("Обновление страницы")
         self.driver.refresh()
+
+    def scroll_to_bottom(self):
+        Logger.info("Прокрутка страницы вниз")
+        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")

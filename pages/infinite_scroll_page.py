@@ -23,10 +23,6 @@ class InfiniteScrollPage(BasePage):
         Logger.info(f"Количество абзацев: {count}")
         return count
 
-    def scroll_to_bottom(self):
-        Logger.info("Прокрутка страницы вниз")
-        self.browser.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-
     def wait_for_paragraphs_increase(self, old_count: int, timeout: int = None):
         timeout = timeout or self.browser.DEFAULT_TIMEOUT
         Logger.info(f"Ожидание увеличения количества абзацев (было {old_count})")

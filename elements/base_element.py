@@ -85,8 +85,6 @@ class BaseElement:
         try:
             self.wait_for_presence(timeout)
             return True
-        except TimeoutException:
-            return False
-        except Exception as e:
+        except (TimeoutException, Exception) as e:
             Logger.error(f"{self}: ошибка при проверке существования - {e}")
             return False

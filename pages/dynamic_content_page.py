@@ -16,16 +16,12 @@ class DynamicContentPage(BasePage):
         super().__init__(browser, unique_element=title_element, name="DynamicContentPage")
 
     def get_image_srcs(self) -> list:
-        try:
-            self.wait_for_open()
-            srcs = []
-            for img in self.images:
-                srcs.append(img.get_attribute("src"))
-            Logger.info(f"Получены src изображений: {srcs}")
-            return srcs
-        except NoSuchWindowException:
-            Logger.error("Окно закрыто, возвращаем пустой список")
-            return []
+        self.wait_for_open()
+        srcs = []
+        for img in self.images:
+            srcs.append(img.get_attribute("src"))
+        Logger.info(f"Получены src изображений: {srcs}")
+        return srcs
 
     def has_duplicate_images(self) -> bool:
         srcs = self.get_image_srcs()

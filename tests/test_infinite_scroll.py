@@ -5,7 +5,7 @@ class TestInfiniteScroll:
 
     ENGINEER_AGE = 29
 
-    def test_infinite_scroll(self, infinite_scroll_page):
+    def test_infinite_scroll(self, infinite_scroll_page, browser):
         page = infinite_scroll_page
         target = self.ENGINEER_AGE
         MAX_SCROLLS = 50
@@ -20,7 +20,7 @@ class TestInfiniteScroll:
                 Logger.info(f"Достигнуто целевое количество абзацев ({current})")
                 return
 
-            page.scroll_to_bottom()
+            browser.scroll_to_bottom()
             page.wait_for_paragraphs_increase(current)
 
         raise AssertionError(
