@@ -32,10 +32,6 @@ class HoversPage(BasePage):
         Logger.info(f"Наведение на карточку пользователя {index + 1}")
         ActionChains(self.browser.driver).move_to_element(element).perform()
 
-        name_locator = self._get_name_locator(index)
-        name_element = WebElement(self.browser, name_locator, description=f"Имя пользователя {index + 1}")
-        name_element.wait_for_visible(timeout)
-
     def get_user_name(self, index: int) -> str:
         name_locator = self._get_name_locator(index)
         name_element = Label(self.browser, name_locator, description=f"Имя пользователя {index + 1}")
