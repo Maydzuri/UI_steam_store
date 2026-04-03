@@ -1,5 +1,7 @@
 import os
 import pytest
+import time
+import requests
 from faker import Faker
 from utils.api_utils import ApiUtils
 from services.university.university_service import UniversityService
@@ -12,6 +14,36 @@ faker = Faker()
 
 AUTH_URL = os.getenv("AUTH_SERVICE_URL", "http://localhost:8000")
 UNIVERSITY_URL = os.getenv("UNIVERSITY_SERVICE_URL", "http://localhost:8001")
+
+
+@pytest.fixture(scope="session", autouse=True)
+def auth_service_readiness():
+    timeout = 180
+    start_time = time.time()
+    while time.time() < start_time + timeout:
+        try:
+            response = requests.get(AuthService.SERVICE_URL + "/docs")
+            response.raise_for_status()
+            break
+        except:
+            time.sleep(1)
+    else:
+        raise RuntimeError(f"Auth service wasn't started during '{timeout}' seconds.")
+
+
+@pytest.fixture(scope="session", autouse=True)
+def university_service_readiness():
+    timeout = 180
+    start_time = time.time()
+    while time.time() < start_time + timeout:
+        try:
+            response = requests.get(UNIVERSITY_URL + "/docs")
+            response.raise_for_status()
+            break
+        except:
+            time.sleep(1)
+    else:
+        raise RuntimeError(f"University service wasn't started during '{timeout}' seconds.")
 
 
 @pytest.fixture(scope="function")
