@@ -25,5 +25,4 @@ results/
 .DS_Store
 Thumbs.db
 
-# Project specific (если нужно)
-# .gitignore
+docker-compose.override.yml
