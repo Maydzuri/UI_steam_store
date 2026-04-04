@@ -1,28 +1,21 @@
 import json
 import requests
 from requests import Session
-
 from utils.logger import Logger
 from utils.json_utils import JsonUtils
 
 
 def log_response(func):
     def _log_response(*args, **kwargs) -> requests.Response:
-        try:
-            response = func(*args, **kwargs)
-            Logger.info(f"Response status code='{response.status_code}', elapsed_time='{response.elapsed}'")
+        response = func(*args, **kwargs)
+        Logger.info(f"Response status code='{response.status_code}', elapsed_time='{response.elapsed}'")
 
-            if JsonUtils.is_json(response.text):
-                body = json.dumps(response.json(), indent=2, ensure_ascii=False)
-                Logger.debug(f"Response body: {body}")
-            else:
-                Logger.debug(f"Response body (non-JSON): {response.text[:500]}")
-
-            return response
-        except Exception as e:
-            Logger.error(f"Request failed: {e}")
-            raise
-
+        if JsonUtils.is_json(response.text):
+            body = json.dumps(response.json(), indent=2, ensure_ascii=False)
+            Logger.debug(f"Response body: {body}")
+        else:
+            Logger.debug(f"Response body (non-JSON): {response.text[:500]}")
+        return response
     return _log_response
 
 
