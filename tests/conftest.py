@@ -1,6 +1,7 @@
 import os
-import pytest
 import time
+import random
+import pytest
 import requests
 from faker import Faker
 from utils.api_utils import ApiUtils
@@ -10,13 +11,15 @@ from services.auth.models.register_request import RegisterRequest
 from services.auth.models.login_request import LoginRequest
 from services.university.models.group_request import GroupRequest
 from services.university.models.student_request import StudentRequest
+from services.university.models.teacher_request import TeacherRequest
 from services.university.models.degree_enum import DegreeEnum
+from services.university.models.subject_enum import SubjectEnum
 
 
 faker = Faker()
 
-AUTH_URL = os.getenv("AUTH_SERVICE_URL", "http://localhost:8000")
-UNIVERSITY_URL = os.getenv("UNIVERSITY_SERVICE_URL", "http://localhost:8001")
+AUTH_URL = os.getenv("AUTH_SERVICE_URL", "http://localhost:8888")
+UNIVERSITY_URL = os.getenv("UNIVERSITY_SERVICE_URL", "http://localhost:8889")
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -71,12 +74,14 @@ def access_token(auth_api_utils_anonym):
             email=faker.email()
         )
     )
-    assert register_response.detail == "User registered"
+    register_response.raise_for_status()
+    register_response.json()
 
     login_response = auth_service.login_user(
         login_request=LoginRequest(username=username, password=password)
     )
-    return login_response.access_token
+    login_response.raise_for_status()
+    return login_response.json().get("access_token")
 
 @pytest.fixture(scope="function")
 def auth_api_utils_admin(access_token):
@@ -95,18 +100,30 @@ def university_service_anonym(university_api_utils_anonym):
     return UniversityService(university_api_utils_anonym)
 
 @pytest.fixture(scope="function")
-def student_without_grades(university_service_admin):
+def test_group(university_service_admin):
     group_request = GroupRequest(name=faker.name())
     group_response = university_service_admin.create_group(group_request)
-    group_id = group_response.id
+    return group_response.id
 
+@pytest.fixture(scope="function")
+def test_student(university_service_admin, test_group):
     student_request = StudentRequest(
         first_name=faker.first_name(),
         last_name=faker.last_name(),
         email=faker.email(),
         degree=DegreeEnum.BACHELOR,
         phone=faker.numerify("+7##########"),
-        group_id=group_id
+        group_id=test_group
     )
     student_response = university_service_admin.create_student(student_request)
     return student_response.id
+
+@pytest.fixture(scope="function")
+def test_teacher(university_service_admin):
+    teacher_request = TeacherRequest(
+        first_name=faker.first_name(),
+        last_name=faker.last_name(),
+        subject=random.choice(list(SubjectEnum))
+    )
+    teacher_response = university_service_admin.create_teacher(teacher_request)
+    return teacher_response.id

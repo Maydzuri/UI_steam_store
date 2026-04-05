@@ -43,7 +43,7 @@ services:
       POSTGRES_HOST: postgres_auth
       POSTGRES_PORT: 5432
     ports:
-      - "8000:8000"
+      - "8888:8000"
     depends_on:
       postgres_auth:
         condition: service_healthy
@@ -60,7 +60,7 @@ services:
       POSTGRES_HOST: postgres_university
       POSTGRES_PORT: 5432
     ports:
-      - "8001:8000"
+      - "8889:8000"
     depends_on:
       postgres_university:
         condition: service_healthy

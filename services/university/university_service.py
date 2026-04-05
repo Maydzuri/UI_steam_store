@@ -15,7 +15,7 @@ from services.university.models.teacher_response import TeacherResponse
 
 
 class UniversityService:
-    SERVICE_URL = "http://127.0.0.1:8001"
+    SERVICE_URL = "http://127.0.0.1:8889"
 
     def __init__(self, api_utils: ApiUtils):
         self.api_utils = api_utils
@@ -24,10 +24,10 @@ class UniversityService:
         self.student_helper = StudentHelper(self.api_utils)
         self.teacher_helper = TeacherHelper(self.api_utils)
 
-    def get_grades_stats(self, student_id: int = None, teacher_id: int = None,
-                         group_id: int = None) -> GradesStatsResponse:
-        data = self.grades_helper.get_stats(student_id, teacher_id, group_id)
-        return GradesStatsResponse(**data)
+    def get_grades_stats(self, student_id: int = None, teacher_id: int = None, group_id: int = None) -> GradesStatsResponse:
+        response = self.grades_helper.get_stats(student_id, teacher_id, group_id)
+        response.raise_for_status()
+        return GradesStatsResponse(**response.json())
 
     def create_grade(self, grade_request: GradeRequest) -> GradeResponse:
         response = self.grades_helper.post_grade(data=grade_request.model_dump())
@@ -45,5 +45,6 @@ class UniversityService:
         return StudentResponse(**response.json())
 
     def create_teacher(self, teacher_request: TeacherRequest) -> TeacherResponse:
-        data = self.teacher_helper.post_teacher(json=teacher_request.model_dump())
-        return TeacherResponse(**data)
+        response = self.teacher_helper.post_teacher(json=teacher_request.model_dump())
+        response.raise_for_status()
+        return TeacherResponse(**response.json())
