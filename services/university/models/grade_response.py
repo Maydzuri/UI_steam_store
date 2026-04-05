@@ -1,10 +1,5 @@
-from pydantic import BaseModel, ConfigDict
+from .base_grade import BaseGrade
 
 
-class GradeResponse(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
+class GradeResponse(BaseGrade):
     id: int
-    teacher_id: int
-    student_id: int
-    grade: int

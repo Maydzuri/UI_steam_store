@@ -14,12 +14,9 @@ class GradesHelper(BaseHelper):
             params["teacher_id"] = teacher_id
         if group_id is not None:
             params["group_id"] = group_id
-
         response = self.api_utils.get(self.STATS_ENDPOINT, params=params)
         response.raise_for_status()
         return response.json()
 
-    def post_grade(self, data: dict) -> dict:
-        response = self.api_utils.post(self.ROOT_ENDPOINT, data=data)
-        response.raise_for_status()
-        return response.json()
+    def post_grade(self, data: dict):
+        return self.api_utils.post(self.ROOT_ENDPOINT, data=data)

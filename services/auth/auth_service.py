@@ -5,6 +5,7 @@ from services.auth.models.login_request import LoginRequest
 from services.auth.models.login_response import LoginResponse
 from services.auth.models.register_request import RegisterRequest
 from services.auth.models.success_response import SuccessResponse
+from services.auth.models.user_response import UserResponse
 
 
 class AuthService:
@@ -25,7 +26,6 @@ class AuthService:
         response.raise_for_status()
         return LoginResponse(**response.json())
 
-    def get_current_user(self) -> dict:
-        response = self.user_helper.get_me()
-        response.raise_for_status()
-        return response.json()
+    def get_current_user(self) -> UserResponse:
+        data = self.user_helper.get_me()
+        return UserResponse(**data)

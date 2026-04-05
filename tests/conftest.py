@@ -8,6 +8,9 @@ from services.university.university_service import UniversityService
 from services.auth.auth_service import AuthService
 from services.auth.models.register_request import RegisterRequest
 from services.auth.models.login_request import LoginRequest
+from services.university.models.group_request import GroupRequest
+from services.university.models.student_request import StudentRequest
+from services.university.models.degree_enum import DegreeEnum
 
 
 faker = Faker()
@@ -90,3 +93,20 @@ def university_service_admin(university_api_utils_admin):
 @pytest.fixture(scope="function")
 def university_service_anonym(university_api_utils_anonym):
     return UniversityService(university_api_utils_anonym)
+
+@pytest.fixture(scope="function")
+def student_without_grades(university_service_admin):
+    group_request = GroupRequest(name=faker.name())
+    group_response = university_service_admin.create_group(group_request)
+    group_id = group_response.id
+
+    student_request = StudentRequest(
+        first_name=faker.first_name(),
+        last_name=faker.last_name(),
+        email=faker.email(),
+        degree=DegreeEnum.BACHELOR,
+        phone=faker.numerify("+7##########"),
+        group_id=group_id
+    )
+    student_response = university_service_admin.create_student(student_request)
+    return student_response.id

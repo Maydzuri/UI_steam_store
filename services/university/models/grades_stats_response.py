@@ -1,11 +1,12 @@
 from pydantic import BaseModel, Field, model_validator
+from config.settings import MIN_GRADE, MAX_GRADE
 
 
 class GradesStatsResponse(BaseModel):
     count: int = Field(ge=0)
-    min: int | None = Field(...)
-    max: int | None = Field(...)
-    avg: float | None = Field(...)
+    min: int | None
+    max: int | None
+    avg: float | None
 
     @model_validator(mode='after')
     def validate_stats(self) -> 'GradesStatsResponse':
@@ -22,5 +23,13 @@ class GradesStatsResponse(BaseModel):
             if not (self.min <= self.avg <= self.max):
                 raise ValueError(
                     f"Некорректная статистика: min={self.min}, avg={self.avg}, max={self.max}"
+                )
+            if self.min < MIN_GRADE or self.max > MAX_GRADE:
+                raise ValueError(
+                    f"Оценки выходят за допустимые границы [{MIN_GRADE}, {MAX_GRADE}]: min={self.min}, max={self.max}"
+                )
+            if self.avg < MIN_GRADE or self.avg > MAX_GRADE:
+                raise ValueError(
+                    f"Средняя оценка {self.avg} выходит за границы [{MIN_GRADE}, {MAX_GRADE}]"
                 )
         return self

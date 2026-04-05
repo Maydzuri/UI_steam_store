@@ -1,9 +1,5 @@
-from pydantic import BaseModel, ConfigDict, Field
+from .base_grade import BaseGrade
 
 
-class GradeRequest(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    teacher_id: int
-    student_id: int
-    grade: int = Field(ge=0, le=5)
+class GradeRequest(BaseGrade):
+    pass

@@ -30,8 +30,9 @@ class UniversityService:
         return GradesStatsResponse(**data)
 
     def create_grade(self, grade_request: GradeRequest) -> GradeResponse:
-        data = self.grades_helper.post_grade(data=grade_request.model_dump())
-        return GradeResponse(**data)
+        response = self.grades_helper.post_grade(data=grade_request.model_dump())
+        response.raise_for_status()
+        return GradeResponse(**response.json())
 
     def create_group(self, group_request: GroupRequest) -> GroupResponse:
         response = self.group_helper.post_group(json=group_request.model_dump())
