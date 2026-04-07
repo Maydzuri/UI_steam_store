@@ -4,6 +4,8 @@ from services.auth.helpers.user_helper import UserHelper
 from services.auth.models.login_request import LoginRequest
 from services.auth.models.register_request import RegisterRequest
 from services.auth.models.user_response import UserResponse
+from services.auth.models.success_response import SuccessResponse
+from services.auth.models.login_response import LoginResponse
 
 
 class AuthService:
@@ -14,13 +16,13 @@ class AuthService:
         self.authorization_helper = AuthorizationHelper(self.api_utils)
         self.user_helper = UserHelper(self.api_utils)
 
-    def register_user(self, register_request: RegisterRequest):
+    def register_user(self, register_request: RegisterRequest) -> SuccessResponse:
         response = self.authorization_helper.post_register(data=register_request.model_dump())
-        return response
+        return SuccessResponse(**response.json())
 
-    def login_user(self, login_request: LoginRequest):
+    def login_user(self, login_request: LoginRequest) -> LoginResponse:
         response = self.authorization_helper.post_login(data=login_request.model_dump())
-        return response
+        return LoginResponse(**response.json())
 
     def get_current_user(self) -> UserResponse:
         data = self.user_helper.get_me()

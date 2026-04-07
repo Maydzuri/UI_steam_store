@@ -14,6 +14,7 @@ from services.university.models.student_request import StudentRequest
 from services.university.models.teacher_request import TeacherRequest
 from services.university.models.degree_enum import DegreeEnum
 from services.university.models.subject_enum import SubjectEnum
+from services.university.models.grade_request import GradeRequest
 
 
 faker = Faker()
@@ -66,7 +67,7 @@ def access_token(auth_api_utils_anonym):
     username = faker.user_name()
     password = faker.password(length=12, special_chars=True, digits=True, upper_case=True, lower_case=True)
 
-    register_response = auth_service.register_user(
+    auth_service.register_user(
         register_request=RegisterRequest(
             username=username,
             password=password,
@@ -74,14 +75,12 @@ def access_token(auth_api_utils_anonym):
             email=faker.email()
         )
     )
-    register_response.raise_for_status()
-    register_response.json()
 
     login_response = auth_service.login_user(
         login_request=LoginRequest(username=username, password=password)
     )
-    login_response.raise_for_status()
-    return login_response.json().get("access_token")
+
+    return login_response.access_token
 
 @pytest.fixture(scope="function")
 def auth_api_utils_admin(access_token):
@@ -127,3 +126,19 @@ def test_teacher(university_service_admin):
     )
     teacher_response = university_service_admin.create_teacher(teacher_request)
     return teacher_response.id
+
+@pytest.fixture(scope="function")
+def student_with_grades(university_service_admin, test_student, test_teacher):
+    grade_request_1 = GradeRequest(
+        teacher_id=test_teacher,
+        student_id=test_student,
+        grade=4
+    )
+    grade_request_2 = GradeRequest(
+        teacher_id=test_teacher,
+        student_id=test_student,
+        grade=5
+    )
+    university_service_admin.create_grade(grade_request_1)
+    university_service_admin.create_grade(grade_request_2)
+    return test_student
