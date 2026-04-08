@@ -4,14 +4,9 @@ from services.university.helpers.group_helper import GroupHelper
 from services.university.helpers.student_helper import StudentHelper
 from services.university.helpers.teacher_helper import TeacherHelper
 from services.university.models.grade_request import GradeRequest
-from services.university.models.grade_response import GradeResponse
-from services.university.models.grades_stats_response import GradesStatsResponse
 from services.university.models.group_request import GroupRequest
-from services.university.models.group_response import GroupResponse
 from services.university.models.student_request import StudentRequest
-from services.university.models.student_response import StudentResponse
 from services.university.models.teacher_request import TeacherRequest
-from services.university.models.teacher_response import TeacherResponse
 
 
 class UniversityService:
@@ -24,27 +19,26 @@ class UniversityService:
         self.student_helper = StudentHelper(self.api_utils)
         self.teacher_helper = TeacherHelper(self.api_utils)
 
-    def get_grades_stats(self, student_id: int = None, teacher_id: int = None, group_id: int = None) -> GradesStatsResponse:
+    def get_grades_stats(self, student_id: int = None, teacher_id: int = None, group_id: int = None):
         response = self.grades_helper.get_stats(student_id, teacher_id, group_id)
-        response.raise_for_status()
-        return GradesStatsResponse(**response.json())
+        return response.json()
 
-    def create_grade(self, grade_request: GradeRequest) -> GradeResponse:
+    def create_grade(self, grade_request: GradeRequest):
         response = self.grades_helper.post_grade(data=grade_request.model_dump())
-        response.raise_for_status()
-        return GradeResponse(**response.json())
+        return response.json()
 
-    def create_group(self, group_request: GroupRequest) -> GroupResponse:
+    def create_group(self, group_request: GroupRequest):
         response = self.group_helper.post_group(json=group_request.model_dump())
-        response.raise_for_status()
-        return GroupResponse(**response.json())
+        return response.json()
 
-    def create_student(self, student_request: StudentRequest) -> StudentResponse:
+    def create_student(self, student_request: StudentRequest):
         response = self.student_helper.post_student(json=student_request.model_dump())
-        response.raise_for_status()
-        return StudentResponse(**response.json())
+        return response.json()
 
-    def create_teacher(self, teacher_request: TeacherRequest) -> TeacherResponse:
+    def get_students(self):
+        response = self.student_helper.get_students()
+        return response.json()
+
+    def create_teacher(self, teacher_request: TeacherRequest):
         response = self.teacher_helper.post_teacher(json=teacher_request.model_dump())
-        response.raise_for_status()
-        return TeacherResponse(**response.json())
+        return response.json()
