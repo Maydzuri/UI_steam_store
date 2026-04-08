@@ -96,6 +96,18 @@ def university_service_anonym(university_api_utils_anonym):
     return UniversityService(university_api_utils_anonym)
 
 @pytest.fixture(scope="function")
+def test_student(university_service_admin, test_group):
+    student_request = StudentRequest(
+        first_name=faker.first_name(),
+        last_name=faker.last_name(),
+        email=faker.email(),
+        degree=DegreeEnum.BACHELOR,
+        phone=faker.numerify("+7##########"),
+        group_id=test_group
+    )
+    return university_service_admin.create_student(student_request).get("id")
+
+@pytest.fixture(scope="function")
 def test_group(university_service_admin):
     group_request = GroupRequest(name=faker.name())
     return university_service_admin.create_group(group_request).get("id")

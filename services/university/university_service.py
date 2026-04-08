@@ -1,3 +1,4 @@
+from services.university.models.grades_stats_response import GradesStatsResponse
 from utils.api_utils import ApiUtils
 from services.university.helpers.grades_helper import GradesHelper
 from services.university.helpers.group_helper import GroupHelper
@@ -21,7 +22,7 @@ class UniversityService:
 
     def get_grades_stats(self, student_id: int = None, teacher_id: int = None, group_id: int = None):
         response = self.grades_helper.get_stats(student_id, teacher_id, group_id)
-        return response.json()
+        return GradesStatsResponse(**response.json())
 
     def create_grade(self, grade_request: GradeRequest):
         response = self.grades_helper.post_grade(data=grade_request.model_dump())
