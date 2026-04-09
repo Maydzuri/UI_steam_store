@@ -105,12 +105,12 @@ def test_student(university_service_admin, test_group):
         phone=faker.numerify("+7##########"),
         group_id=test_group
     )
-    return university_service_admin.create_student(student_request).get("id")
+    return university_service_admin.create_student(student_request).id
 
 @pytest.fixture(scope="function")
 def test_group(university_service_admin):
     group_request = GroupRequest(name=faker.name())
-    return university_service_admin.create_group(group_request).get("id")
+    return university_service_admin.create_group(group_request).id
 
 @pytest.fixture(scope="function")
 def test_teacher(university_service_admin):
@@ -119,7 +119,7 @@ def test_teacher(university_service_admin):
         last_name=faker.last_name(),
         subject=random.choice(list(SubjectEnum))
     )
-    return university_service_admin.create_teacher(teacher_request).get("id")
+    return university_service_admin.create_teacher(teacher_request).id
 
 @pytest.fixture(scope="function")
 def student_a_with_grades(university_service_admin, test_group, test_teacher):
@@ -131,7 +131,7 @@ def student_a_with_grades(university_service_admin, test_group, test_teacher):
         phone=faker.numerify("+7##########"),
         group_id=test_group
     )
-    student = university_service_admin.create_student(student_request).get("id")
+    student = university_service_admin.create_student(student_request).id
 
     grade_request_1 = GradeRequest(teacher_id=test_teacher, student_id=student, grade=4)
     grade_request_2 = GradeRequest(teacher_id=test_teacher, student_id=student, grade=5)
@@ -149,7 +149,7 @@ def student_b_with_grades(university_service_admin, test_group, test_teacher):
         phone=faker.numerify("+7##########"),
         group_id=test_group
     )
-    student = university_service_admin.create_student(student_request).get("id")
+    student = university_service_admin.create_student(student_request).id
 
     grade_request_1 = GradeRequest(teacher_id=test_teacher, student_id=student, grade=2)
     grade_request_2 = GradeRequest(teacher_id=test_teacher, student_id=student, grade=3)
@@ -166,7 +166,7 @@ def teacher_x_with_grades(university_service_admin, test_group):
         last_name=faker.last_name(),
         subject=random.choice(list(SubjectEnum))
     )
-    teacher = university_service_admin.create_teacher(teacher_request).get("id")
+    teacher = university_service_admin.create_teacher(teacher_request).id
 
     student1_request = StudentRequest(
         first_name=faker.first_name(),
@@ -176,7 +176,7 @@ def teacher_x_with_grades(university_service_admin, test_group):
         phone=faker.numerify("+7##########"),
         group_id=test_group
     )
-    student1 = university_service_admin.create_student(student1_request).get("id")
+    student1 = university_service_admin.create_student(student1_request).id
 
     student2_request = StudentRequest(
         first_name=faker.first_name(),
@@ -186,7 +186,7 @@ def teacher_x_with_grades(university_service_admin, test_group):
         phone=faker.numerify("+7##########"),
         group_id=test_group
     )
-    student2 = university_service_admin.create_student(student2_request).get("id")
+    student2 = university_service_admin.create_student(student2_request).id
 
     grade_request_1 = GradeRequest(teacher_id=teacher, student_id=student1, grade=5)
     grade_request_2 = GradeRequest(teacher_id=teacher, student_id=student1, grade=4)
@@ -203,7 +203,7 @@ def teacher_y_with_grades(university_service_admin, test_group):
         last_name=faker.last_name(),
         subject=random.choice(list(SubjectEnum))
     )
-    teacher = university_service_admin.create_teacher(teacher_request).get("id")
+    teacher = university_service_admin.create_teacher(teacher_request).id
 
     student_request = StudentRequest(
         first_name=faker.first_name(),
@@ -213,7 +213,7 @@ def teacher_y_with_grades(university_service_admin, test_group):
         phone=faker.numerify("+7##########"),
         group_id=test_group
     )
-    student = university_service_admin.create_student(student_request).get("id")
+    student = university_service_admin.create_student(student_request).id
 
     grade_request_1 = GradeRequest(teacher_id=teacher, student_id=student, grade=2)
     grade_request_2 = GradeRequest(teacher_id=teacher, student_id=student, grade=3)
@@ -224,7 +224,7 @@ def teacher_y_with_grades(university_service_admin, test_group):
 @pytest.fixture(scope="function")
 def group1_with_grades(university_service_admin, test_teacher):
     group_request = GroupRequest(name=faker.name())
-    group = university_service_admin.create_group(group_request).get("id")
+    group = university_service_admin.create_group(group_request).id
 
     student_a_request = StudentRequest(
         first_name=faker.first_name(),
@@ -234,7 +234,7 @@ def group1_with_grades(university_service_admin, test_teacher):
         phone=faker.numerify("+7##########"),
         group_id=group
     )
-    student_a = university_service_admin.create_student(student_a_request).get("id")
+    student_a = university_service_admin.create_student(student_a_request).id
 
     student_b_request = StudentRequest(
         first_name=faker.first_name(),
@@ -244,7 +244,7 @@ def group1_with_grades(university_service_admin, test_teacher):
         phone=faker.numerify("+7##########"),
         group_id=group
     )
-    student_b = university_service_admin.create_student(student_b_request).get("id")
+    student_b = university_service_admin.create_student(student_b_request).id
 
     grade_request_1 = GradeRequest(teacher_id=test_teacher, student_id=student_a, grade=5)
     grade_request_2 = GradeRequest(teacher_id=test_teacher, student_id=student_a, grade=4)
@@ -257,7 +257,7 @@ def group1_with_grades(university_service_admin, test_teacher):
 @pytest.fixture(scope="function")
 def group2_with_grades(university_service_admin, test_teacher):
     group_request = GroupRequest(name=faker.name())
-    group = university_service_admin.create_group(group_request).get("id")
+    group = university_service_admin.create_group(group_request).id
 
     student_c_request = StudentRequest(
         first_name=faker.first_name(),
@@ -267,7 +267,7 @@ def group2_with_grades(university_service_admin, test_teacher):
         phone=faker.numerify("+7##########"),
         group_id=group
     )
-    student_c = university_service_admin.create_student(student_c_request).get("id")
+    student_c = university_service_admin.create_student(student_c_request).id
 
     grade_request_1 = GradeRequest(teacher_id=test_teacher, student_id=student_c, grade=5)
     grade_request_2 = GradeRequest(teacher_id=test_teacher, student_id=student_c, grade=5)
@@ -282,14 +282,14 @@ def student_a_teacher_x_with_grade(university_service_admin, test_group):
         last_name=faker.last_name(),
         subject=random.choice(list(SubjectEnum))
     )
-    teacher_x = university_service_admin.create_teacher(teacher_x_request).get("id")
+    teacher_x = university_service_admin.create_teacher(teacher_x_request).id
 
     teacher_y_request = TeacherRequest(
         first_name=faker.first_name(),
         last_name=faker.last_name(),
         subject=random.choice(list(SubjectEnum))
     )
-    teacher_y = university_service_admin.create_teacher(teacher_y_request).get("id")
+    teacher_y = university_service_admin.create_teacher(teacher_y_request).id
 
     student_a_request = StudentRequest(
         first_name=faker.first_name(),
@@ -299,7 +299,7 @@ def student_a_teacher_x_with_grade(university_service_admin, test_group):
         phone=faker.numerify("+7##########"),
         group_id=test_group
     )
-    student_a = university_service_admin.create_student(student_a_request).get("id")
+    student_a = university_service_admin.create_student(student_a_request).id
 
     student_b_request = StudentRequest(
         first_name=faker.first_name(),
@@ -309,7 +309,7 @@ def student_a_teacher_x_with_grade(university_service_admin, test_group):
         phone=faker.numerify("+7##########"),
         group_id=test_group
     )
-    student_b = university_service_admin.create_student(student_b_request).get("id")
+    student_b = university_service_admin.create_student(student_b_request).id
 
     grade_request_1 = GradeRequest(teacher_id=teacher_x, student_id=student_a, grade=5)
     grade_request_2 = GradeRequest(teacher_id=teacher_y, student_id=student_a, grade=4)
@@ -324,5 +324,5 @@ def max_student_id(university_service_admin):
     students = university_service_admin.get_students()
     if not students:
         return 0
-    ids = [s.get("id") for s in students]
+    ids = [s.id for s in students]
     return max(ids)

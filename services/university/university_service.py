@@ -8,6 +8,11 @@ from services.university.models.grade_request import GradeRequest
 from services.university.models.group_request import GroupRequest
 from services.university.models.student_request import StudentRequest
 from services.university.models.teacher_request import TeacherRequest
+from services.university.models.grade_response import GradeResponse
+from services.university.models.group_response import GroupResponse
+from services.university.models.student_response import StudentResponse
+from services.university.models.teacher_response import TeacherResponse
+
 
 
 class UniversityService:
@@ -24,22 +29,22 @@ class UniversityService:
         response = self.grades_helper.get_stats(student_id, teacher_id, group_id)
         return GradesStatsResponse(**response.json())
 
-    def create_grade(self, grade_request: GradeRequest):
+    def create_grade(self, grade_request: GradeRequest) -> GradeResponse:
         response = self.grades_helper.post_grade(data=grade_request.model_dump())
-        return response.json()
+        return GradeResponse(**response.json())
 
-    def create_group(self, group_request: GroupRequest):
+    def create_group(self, group_request: GroupRequest) -> GroupResponse:
         response = self.group_helper.post_group(json=group_request.model_dump())
-        return response.json()
+        return GroupResponse(**response.json())
 
-    def create_student(self, student_request: StudentRequest):
+    def create_student(self, student_request: StudentRequest) -> StudentResponse:
         response = self.student_helper.post_student(json=student_request.model_dump())
-        return response.json()
+        return StudentResponse(**response.json())
 
-    def get_students(self):
+    def get_students(self) -> list[StudentResponse]:
         response = self.student_helper.get_students()
-        return response.json()
+        return [StudentResponse(**item) for item in response.json()]
 
-    def create_teacher(self, teacher_request: TeacherRequest):
+    def create_teacher(self, teacher_request: TeacherRequest) -> TeacherResponse:
         response = self.teacher_helper.post_teacher(json=teacher_request.model_dump())
-        return response.json()
+        return TeacherResponse(**response.json())
