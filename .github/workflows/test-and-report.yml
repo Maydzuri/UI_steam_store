@@ -33,10 +33,16 @@ jobs:
     - name: Build test image
       run: docker build -t university-tests .
 
+    - name: Get network name
+      id: network
+      run: |
+        NETWORK_NAME=$(docker network ls --format '{{.Name}}' | grep "_default")
+        echo "network_name=${NETWORK_NAME}" >> $GITHUB_OUTPUT
+
     - name: Wait for API services
       run: |
         docker run --rm \
-          --network ${GITHUB_WORKSPACE##*/}_default \
+          --network ${{ steps.network.outputs.network_name }} \
           -v ${{ github.workspace }}:/app \
           university-tests \
           python wait_for_services.py
@@ -45,7 +51,7 @@ jobs:
       run: |
         mkdir -p allure-results
         docker run --rm \
-          --network ${GITHUB_WORKSPACE##*/}_default \
+          --network ${{ steps.network.outputs.network_name }} \
           -v ${{ github.workspace }}/allure-results:/app/allure-results \
           -e AUTH_SERVICE_API_URL=http://auth:8000 \
           -e UNIVERSITY_SERVICE_API_URL=http://university:8000 \
