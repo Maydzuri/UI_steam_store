@@ -1,11 +1,11 @@
-from utils.api_utils import ApiUtils
 from services.auth.helpers.authorization_helper import AuthorizationHelper
 from services.auth.helpers.user_helper import UserHelper
 from services.auth.models.login_request import LoginRequest
-from services.auth.models.register_request import RegisterRequest
-from services.auth.models.user_response import UserResponse
-from services.auth.models.success_response import SuccessResponse
 from services.auth.models.login_response import LoginResponse
+from services.auth.models.register_request import RegisterRequest
+from services.auth.models.success_response import SuccessResponse
+from services.auth.models.user_response import UserResponse
+from utils.api_utils import ApiUtils
 
 
 class AuthService:

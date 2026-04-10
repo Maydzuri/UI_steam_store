@@ -1,7 +1,9 @@
 import logging
 import os
 import sys
+
 from logging.handlers import RotatingFileHandler
+
 from config.logger_config import LoggerConfig
 
 
@@ -17,7 +19,7 @@ class Logger:
             LoggerConfig.LOGS_FILE_NAME,
             maxBytes=LoggerConfig.MAX_BYTES,
             backupCount=LoggerConfig.BACKUP_COUNT,
-            encoding='utf-8'
+            encoding="utf-8",
         )
         _handler2 = logging.StreamHandler(sys.stdout)
         _formatter = logging.Formatter(LoggerConfig.FORMAT, datefmt=LoggerConfig.DATETIME_FORMAT)

@@ -1,8 +1,11 @@
 import json
+
 import requests
+
 from requests import Session
-from utils.logger import Logger
+
 from utils.json_utils import JsonUtils
+from utils.logger import Logger
 
 
 def log_response(func):
@@ -16,6 +19,7 @@ def log_response(func):
         else:
             Logger.debug(f"Response body (non-JSON): {response.text[:500]}")
         return response
+
     return _log_response
 
 

@@ -1,4 +1,5 @@
 from pydantic import BaseModel, ConfigDict
+
 from .subject_enum import SubjectEnum
 
 

@@ -24,3 +24,8 @@ results/
 # OS
 .DS_Store
 Thumbs.db
+
+# Allure
+allure-results/
+allure-report/
+allure-history/

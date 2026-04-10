@@ -1,20 +1,23 @@
 import os
-import time
 import random
+import time
+
 import pytest
 import requests
+
 from faker import Faker
-from utils.api_utils import ApiUtils
-from services.university.university_service import UniversityService
+
 from services.auth.auth_service import AuthService
-from services.auth.models.register_request import RegisterRequest
 from services.auth.models.login_request import LoginRequest
+from services.auth.models.register_request import RegisterRequest
+from services.university.models.degree_enum import DegreeEnum
+from services.university.models.grade_request import GradeRequest
 from services.university.models.group_request import GroupRequest
 from services.university.models.student_request import StudentRequest
-from services.university.models.teacher_request import TeacherRequest
-from services.university.models.grade_request import GradeRequest
-from services.university.models.degree_enum import DegreeEnum
 from services.university.models.subject_enum import SubjectEnum
+from services.university.models.teacher_request import TeacherRequest
+from services.university.university_service import UniversityService
+from utils.api_utils import ApiUtils
 
 faker = Faker()
 
@@ -36,6 +39,7 @@ def auth_service_readiness():
     else:
         raise RuntimeError(f"Auth service wasn't started during '{timeout}' seconds.")
 
+
 @pytest.fixture(scope="session", autouse=True)
 def university_service_readiness():
     timeout = 180
@@ -50,13 +54,16 @@ def university_service_readiness():
     else:
         raise RuntimeError(f"University service wasn't started during '{timeout}' seconds.")
 
+
 @pytest.fixture(scope="function")
 def auth_api_utils_anonym():
     return ApiUtils(url=AUTH_URL)
 
+
 @pytest.fixture(scope="function")
 def university_api_utils_anonym():
     return ApiUtils(url=UNIVERSITY_URL)
+
 
 @pytest.fixture(scope="function")
 def access_token(auth_api_utils_anonym):
@@ -69,13 +76,11 @@ def access_token(auth_api_utils_anonym):
             username=username,
             password=password,
             password_repeat=password,
-            email=faker.email()
+            email=faker.email(),
         )
     )
 
-    login_response = auth_service.login_user(
-        login_request=LoginRequest(username=username, password=password)
-    )
+    login_response = auth_service.login_user(login_request=LoginRequest(username=username, password=password))
     return login_response.access_token
 
 
@@ -83,17 +88,21 @@ def access_token(auth_api_utils_anonym):
 def auth_api_utils_admin(access_token):
     return ApiUtils(url=AUTH_URL, headers={"Authorization": f"Bearer {access_token}"})
 
+
 @pytest.fixture(scope="function")
 def university_api_utils_admin(access_token):
     return ApiUtils(url=UNIVERSITY_URL, headers={"Authorization": f"Bearer {access_token}"})
+
 
 @pytest.fixture(scope="function")
 def university_service_admin(university_api_utils_admin):
     return UniversityService(university_api_utils_admin)
 
+
 @pytest.fixture(scope="function")
 def university_service_anonym(university_api_utils_anonym):
     return UniversityService(university_api_utils_anonym)
+
 
 @pytest.fixture(scope="function")
 def test_student(university_service_admin, test_group):
@@ -103,23 +112,26 @@ def test_student(university_service_admin, test_group):
         email=faker.email(),
         degree=DegreeEnum.BACHELOR,
         phone=faker.numerify("+7##########"),
-        group_id=test_group
+        group_id=test_group,
     )
     return university_service_admin.create_student(student_request).id
+
 
 @pytest.fixture(scope="function")
 def test_group(university_service_admin):
     group_request = GroupRequest(name=faker.name())
     return university_service_admin.create_group(group_request).id
 
+
 @pytest.fixture(scope="function")
 def test_teacher(university_service_admin):
     teacher_request = TeacherRequest(
         first_name=faker.first_name(),
         last_name=faker.last_name(),
-        subject=random.choice(list(SubjectEnum))
+        subject=random.choice(list(SubjectEnum)),
     )
     return university_service_admin.create_teacher(teacher_request).id
+
 
 @pytest.fixture(scope="function")
 def student_a_with_grades(university_service_admin, test_group, test_teacher):
@@ -129,7 +141,7 @@ def student_a_with_grades(university_service_admin, test_group, test_teacher):
         email=faker.email(),
         degree=DegreeEnum.BACHELOR,
         phone=faker.numerify("+7##########"),
-        group_id=test_group
+        group_id=test_group,
     )
     student = university_service_admin.create_student(student_request).id
 
@@ -139,6 +151,7 @@ def student_a_with_grades(university_service_admin, test_group, test_teacher):
     university_service_admin.create_grade(grade_request_2)
     return student
 
+
 @pytest.fixture(scope="function")
 def student_b_with_grades(university_service_admin, test_group, test_teacher):
     student_request = StudentRequest(
@@ -147,7 +160,7 @@ def student_b_with_grades(university_service_admin, test_group, test_teacher):
         email=faker.email(),
         degree=DegreeEnum.BACHELOR,
         phone=faker.numerify("+7##########"),
-        group_id=test_group
+        group_id=test_group,
     )
     student = university_service_admin.create_student(student_request).id
 
@@ -159,12 +172,13 @@ def student_b_with_grades(university_service_admin, test_group, test_teacher):
     university_service_admin.create_grade(grade_request_3)
     return student
 
+
 @pytest.fixture(scope="function")
 def teacher_x_with_grades(university_service_admin, test_group):
     teacher_request = TeacherRequest(
         first_name=faker.first_name(),
         last_name=faker.last_name(),
-        subject=random.choice(list(SubjectEnum))
+        subject=random.choice(list(SubjectEnum)),
     )
     teacher = university_service_admin.create_teacher(teacher_request).id
 
@@ -174,7 +188,7 @@ def teacher_x_with_grades(university_service_admin, test_group):
         email=faker.email(),
         degree=DegreeEnum.BACHELOR,
         phone=faker.numerify("+7##########"),
-        group_id=test_group
+        group_id=test_group,
     )
     student1 = university_service_admin.create_student(student1_request).id
 
@@ -184,7 +198,7 @@ def teacher_x_with_grades(university_service_admin, test_group):
         email=faker.email(),
         degree=DegreeEnum.BACHELOR,
         phone=faker.numerify("+7##########"),
-        group_id=test_group
+        group_id=test_group,
     )
     student2 = university_service_admin.create_student(student2_request).id
 
@@ -196,12 +210,13 @@ def teacher_x_with_grades(university_service_admin, test_group):
     university_service_admin.create_grade(grade_request_3)
     return teacher
 
+
 @pytest.fixture(scope="function")
 def teacher_y_with_grades(university_service_admin, test_group):
     teacher_request = TeacherRequest(
         first_name=faker.first_name(),
         last_name=faker.last_name(),
-        subject=random.choice(list(SubjectEnum))
+        subject=random.choice(list(SubjectEnum)),
     )
     teacher = university_service_admin.create_teacher(teacher_request).id
 
@@ -211,7 +226,7 @@ def teacher_y_with_grades(university_service_admin, test_group):
         email=faker.email(),
         degree=DegreeEnum.BACHELOR,
         phone=faker.numerify("+7##########"),
-        group_id=test_group
+        group_id=test_group,
     )
     student = university_service_admin.create_student(student_request).id
 
@@ -220,6 +235,7 @@ def teacher_y_with_grades(university_service_admin, test_group):
     university_service_admin.create_grade(grade_request_1)
     university_service_admin.create_grade(grade_request_2)
     return teacher
+
 
 @pytest.fixture(scope="function")
 def group1_with_grades(university_service_admin, test_teacher):
@@ -232,7 +248,7 @@ def group1_with_grades(university_service_admin, test_teacher):
         email=faker.email(),
         degree=DegreeEnum.BACHELOR,
         phone=faker.numerify("+7##########"),
-        group_id=group
+        group_id=group,
     )
     student_a = university_service_admin.create_student(student_a_request).id
 
@@ -242,7 +258,7 @@ def group1_with_grades(university_service_admin, test_teacher):
         email=faker.email(),
         degree=DegreeEnum.BACHELOR,
         phone=faker.numerify("+7##########"),
-        group_id=group
+        group_id=group,
     )
     student_b = university_service_admin.create_student(student_b_request).id
 
@@ -253,6 +269,7 @@ def group1_with_grades(university_service_admin, test_teacher):
     university_service_admin.create_grade(grade_request_2)
     university_service_admin.create_grade(grade_request_3)
     return group
+
 
 @pytest.fixture(scope="function")
 def group2_with_grades(university_service_admin, test_teacher):
@@ -265,7 +282,7 @@ def group2_with_grades(university_service_admin, test_teacher):
         email=faker.email(),
         degree=DegreeEnum.BACHELOR,
         phone=faker.numerify("+7##########"),
-        group_id=group
+        group_id=group,
     )
     student_c = university_service_admin.create_student(student_c_request).id
 
@@ -275,19 +292,20 @@ def group2_with_grades(university_service_admin, test_teacher):
     university_service_admin.create_grade(grade_request_2)
     return group
 
+
 @pytest.fixture(scope="function")
 def student_a_teacher_x_with_grade(university_service_admin, test_group):
     teacher_x_request = TeacherRequest(
         first_name=faker.first_name(),
         last_name=faker.last_name(),
-        subject=random.choice(list(SubjectEnum))
+        subject=random.choice(list(SubjectEnum)),
     )
     teacher_x = university_service_admin.create_teacher(teacher_x_request).id
 
     teacher_y_request = TeacherRequest(
         first_name=faker.first_name(),
         last_name=faker.last_name(),
-        subject=random.choice(list(SubjectEnum))
+        subject=random.choice(list(SubjectEnum)),
     )
     teacher_y = university_service_admin.create_teacher(teacher_y_request).id
 
@@ -297,7 +315,7 @@ def student_a_teacher_x_with_grade(university_service_admin, test_group):
         email=faker.email(),
         degree=DegreeEnum.BACHELOR,
         phone=faker.numerify("+7##########"),
-        group_id=test_group
+        group_id=test_group,
     )
     student_a = university_service_admin.create_student(student_a_request).id
 
@@ -307,7 +325,7 @@ def student_a_teacher_x_with_grade(university_service_admin, test_group):
         email=faker.email(),
         degree=DegreeEnum.BACHELOR,
         phone=faker.numerify("+7##########"),
-        group_id=test_group
+        group_id=test_group,
     )
     student_b = university_service_admin.create_student(student_b_request).id
 
@@ -318,6 +336,7 @@ def student_a_teacher_x_with_grade(university_service_admin, test_group):
     university_service_admin.create_grade(grade_request_2)
     university_service_admin.create_grade(grade_request_3)
     return student_a, teacher_x
+
 
 @pytest.fixture(scope="function")
 def max_student_id(university_service_admin):

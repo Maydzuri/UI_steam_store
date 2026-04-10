@@ -1,4 +1,5 @@
 from pydantic import BaseModel, ConfigDict
+
 from .degree_enum import DegreeEnum
 
 

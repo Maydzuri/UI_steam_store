@@ -1,5 +1,6 @@
 from pydantic import BaseModel, ConfigDict, Field
-from .grade_constants import MIN_GRADE, MAX_GRADE
+
+from .grade_constants import MAX_GRADE, MIN_GRADE
 
 
 class BaseGrade(BaseModel):

@@ -2,13 +2,8 @@ from services.university.models.grade_request import GradeRequest
 
 
 class TestGradesStats:
-
     def _create_test_grade(self, university_service_admin, student_id: int, teacher_id: int, grade: int):
-        grade_request = GradeRequest(
-            teacher_id=teacher_id,
-            student_id=student_id,
-            grade=grade
-        )
+        grade_request = GradeRequest(teacher_id=teacher_id, student_id=student_id, grade=grade)
         return university_service_admin.create_grade(grade_request)
 
     def test_stats_returns_200_without_params(self, university_service_admin):
@@ -29,8 +24,7 @@ class TestGradesStats:
 
     def test_stats_returns_403_without_token(self, university_service_anonym):
         response = university_service_anonym.grades_helper.get_stats()
-        assert response.status_code == 403, \
-            f"Ожидался статус 403, получен {response.status_code}"
+        assert response.status_code == 403, f"Ожидался статус 403, получен {response.status_code}"
 
     def test_stats_min_is_none_when_no_data(self, university_service_admin, test_student):
         stats = university_service_admin.get_grades_stats(student_id=test_student)
@@ -65,62 +59,77 @@ class TestGradesStats:
         stats = university_service_admin.get_grades_stats(student_id=test_student)
         assert stats.avg == 3.5, f"Ожидался avg = 3.5, получен {stats.avg}"
 
-    def test_filter_by_student_id_returns_correct_count(self, university_service_admin, student_a_with_grades, student_b_with_grades):
+    def test_filter_by_student_id_returns_correct_count(
+        self, university_service_admin, student_a_with_grades, student_b_with_grades
+    ):
         stats = university_service_admin.get_grades_stats(student_id=student_a_with_grades)
         assert stats.count == 2, f"Ожидался count = 2, получен {stats.count}"
 
-    def test_filter_by_student_id_returns_correct_min(self, university_service_admin, student_a_with_grades, student_b_with_grades):
+    def test_filter_by_student_id_returns_correct_min(
+        self, university_service_admin, student_a_with_grades, student_b_with_grades
+    ):
         stats = university_service_admin.get_grades_stats(student_id=student_a_with_grades)
         assert stats.min == 4, f"Ожидался min = 4, получен {stats.min}"
 
-    def test_filter_by_student_id_returns_correct_max(self, university_service_admin, student_a_with_grades, student_b_with_grades):
+    def test_filter_by_student_id_returns_correct_max(
+        self, university_service_admin, student_a_with_grades, student_b_with_grades
+    ):
         stats = university_service_admin.get_grades_stats(student_id=student_a_with_grades)
         assert stats.max == 5, f"Ожидался max = 5, получен {stats.max}"
 
-    def test_filter_by_teacher_id_returns_correct_count(self, university_service_admin, teacher_x_with_grades,
-                                                        teacher_y_with_grades):
+    def test_filter_by_teacher_id_returns_correct_count(
+        self, university_service_admin, teacher_x_with_grades, teacher_y_with_grades
+    ):
         stats = university_service_admin.get_grades_stats(teacher_id=teacher_x_with_grades)
         assert stats.count == 3, f"Ожидался count = 3, получен {stats.get('count')}"
 
-    def test_filter_by_teacher_id_returns_correct_min(self, university_service_admin, teacher_x_with_grades,
-                                                      teacher_y_with_grades):
+    def test_filter_by_teacher_id_returns_correct_min(
+        self, university_service_admin, teacher_x_with_grades, teacher_y_with_grades
+    ):
         stats = university_service_admin.get_grades_stats(teacher_id=teacher_x_with_grades)
         assert stats.min == 4, f"Ожидался min = 4, получен {stats.get('min')}"
 
-    def test_filter_by_teacher_id_returns_correct_max(self, university_service_admin, teacher_x_with_grades,
-                                                      teacher_y_with_grades):
+    def test_filter_by_teacher_id_returns_correct_max(
+        self, university_service_admin, teacher_x_with_grades, teacher_y_with_grades
+    ):
         stats = university_service_admin.get_grades_stats(teacher_id=teacher_x_with_grades)
         assert stats.max == 5, f"Ожидался max = 5, получен {stats.get('max')}"
 
-    def test_filter_by_group_id_returns_correct_count(self, university_service_admin, group1_with_grades,
-                                                      group2_with_grades):
+    def test_filter_by_group_id_returns_correct_count(
+        self, university_service_admin, group1_with_grades, group2_with_grades
+    ):
         stats = university_service_admin.get_grades_stats(group_id=group1_with_grades)
         assert stats.count == 3, f"Ожидался count = 3, получен {stats.get('count')}"
 
-    def test_filter_by_group_id_returns_correct_min(self, university_service_admin, group1_with_grades,
-                                                    group2_with_grades):
+    def test_filter_by_group_id_returns_correct_min(
+        self, university_service_admin, group1_with_grades, group2_with_grades
+    ):
         stats = university_service_admin.get_grades_stats(group_id=group1_with_grades)
         assert stats.min == 3, f"Ожидался min = 3, получен {stats.get('min')}"
 
-    def test_filter_by_group_id_returns_correct_max(self, university_service_admin, group1_with_grades,
-                                                    group2_with_grades):
+    def test_filter_by_group_id_returns_correct_max(
+        self, university_service_admin, group1_with_grades, group2_with_grades
+    ):
         stats = university_service_admin.get_grades_stats(group_id=group1_with_grades)
         assert stats.max == 5, f"Ожидался max = 5, получен {stats.get('max')}"
 
-    def test_filter_by_student_and_teacher_returns_correct_count(self, university_service_admin,
-                                                                 student_a_teacher_x_with_grade):
+    def test_filter_by_student_and_teacher_returns_correct_count(
+        self, university_service_admin, student_a_teacher_x_with_grade
+    ):
         student_a, teacher_x = student_a_teacher_x_with_grade
         stats = university_service_admin.get_grades_stats(student_id=student_a, teacher_id=teacher_x)
         assert stats.count == 1, f"Ожидался count = 1, получен {stats.get('count')}"
 
-    def test_filter_by_student_and_teacher_returns_correct_min(self, university_service_admin,
-                                                               student_a_teacher_x_with_grade):
+    def test_filter_by_student_and_teacher_returns_correct_min(
+        self, university_service_admin, student_a_teacher_x_with_grade
+    ):
         student_a, teacher_x = student_a_teacher_x_with_grade
         stats = university_service_admin.get_grades_stats(student_id=student_a, teacher_id=teacher_x)
         assert stats.min == 5, f"Ожидался min = 5, получен {stats.get('min')}"
 
-    def test_filter_by_student_and_teacher_returns_correct_max(self, university_service_admin,
-                                                               student_a_teacher_x_with_grade):
+    def test_filter_by_student_and_teacher_returns_correct_max(
+        self, university_service_admin, student_a_teacher_x_with_grade
+    ):
         student_a, teacher_x = student_a_teacher_x_with_grade
         stats = university_service_admin.get_grades_stats(student_id=student_a, teacher_id=teacher_x)
         assert stats.max == 5, f"Ожидался max = 5, получен {stats.get('max')}"

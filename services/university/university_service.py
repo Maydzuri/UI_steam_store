@@ -1,18 +1,17 @@
-from services.university.models.grades_stats_response import GradesStatsResponse
-from utils.api_utils import ApiUtils
 from services.university.helpers.grades_helper import GradesHelper
 from services.university.helpers.group_helper import GroupHelper
 from services.university.helpers.student_helper import StudentHelper
 from services.university.helpers.teacher_helper import TeacherHelper
 from services.university.models.grade_request import GradeRequest
-from services.university.models.group_request import GroupRequest
-from services.university.models.student_request import StudentRequest
-from services.university.models.teacher_request import TeacherRequest
 from services.university.models.grade_response import GradeResponse
+from services.university.models.grades_stats_response import GradesStatsResponse
+from services.university.models.group_request import GroupRequest
 from services.university.models.group_response import GroupResponse
+from services.university.models.student_request import StudentRequest
 from services.university.models.student_response import StudentResponse
+from services.university.models.teacher_request import TeacherRequest
 from services.university.models.teacher_response import TeacherResponse
-
+from utils.api_utils import ApiUtils
 
 
 class UniversityService:
