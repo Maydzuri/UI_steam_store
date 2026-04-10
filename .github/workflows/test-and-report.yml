@@ -1,9 +1,7 @@
-name: Run Tests and Publish Allure Report
+name: Run Tests
 
 on:
   push:
-    branches: [ ci-cd ]
-  pull_request:
     branches: [ ci-cd ]
   workflow_dispatch:
 
@@ -15,21 +13,27 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Install Ruff
-      run: pip install ruff
-    - name: Run Ruff
-      run: ruff check . || true
+    - name: Create .env file
+      run: |
+        echo "POSTGRES_USER=postgres" >> .env
+        echo "POSTGRES_PASSWORD=postgres" >> .env
+        echo "POSTGRES_DB_AUTH=auth_db" >> .env
+        echo "POSTGRES_DB_UNIVERSITY=university_db" >> .env
+        echo "AUTH_SERVICE_INTERNAL_URL=http://auth:8000" >> .env
+        echo "UNIVERSITY_SERVICE_INTERNAL_URL=http://university:8000" >> .env
+        echo "AUTH_SERVICE_API_URL=http://localhost:8888" >> .env
+        echo "UNIVERSITY_SERVICE_API_URL=http://localhost:8889" >> .env
 
     - name: Start services
-      run: docker compose up -d
+      run: docker-compose up -d
 
     - name: Wait for PostgreSQL
-      run: sleep 10
+      run: sleep 15
 
     - name: Build test image
       run: docker build -t university-tests .
 
-    - name: Wait for services
+    - name: Wait for API services
       run: |
         docker run --rm \
           --network ${GITHUB_WORKSPACE##*/}_default \
@@ -46,34 +50,8 @@ jobs:
           -e AUTH_SERVICE_API_URL=http://auth:8000 \
           -e UNIVERSITY_SERVICE_API_URL=http://university:8000 \
           university-tests \
-          pytest tests/ -v --alluredir=allure-results || true
+          pytest tests/ -v --alluredir=allure-results
 
     - name: Stop services
       if: always()
-      run: docker compose down
-
-    - name: Upload Allure results
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: allure-results
-        path: allure-results
-
-    - name: Generate Allure report
-      if: always()
-      run: |
-        mkdir -p allure-report
-        docker run --rm \
-          -v ${{ github.workspace }}/allure-results:/app/allure-results \
-          -v ${{ github.workspace }}/allure-report:/app/allure-report \
-          university-tests \
-          allure generate /app/allure-results -o /app/allure-report --clean || true
-
-    - name: Deploy to GitHub Pages
-      if: always()
-      uses: peaceiris/actions-gh-pages@v4
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_branch: gh-pages
-        publish_dir: ./allure-report
-        force_orphan: true
+      run: docker-compose down
