@@ -25,7 +25,7 @@ jobs:
         echo "UNIVERSITY_SERVICE_API_URL=http://localhost:8889" >> .env
 
     - name: Start services
-      run: docker-compose up -d
+      run: docker compose up -d
 
     - name: Wait for PostgreSQL
       run: sleep 15
@@ -54,4 +54,4 @@ jobs:
 
     - name: Stop services
       if: always()
-      run: docker-compose down
+      run: docker compose down
