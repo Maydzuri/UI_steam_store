@@ -1,9 +1,14 @@
-name: Run Tests
+name: Run Tests and Publish Allure Report
 
 on:
   push:
     branches: [ ci-cd ]
   workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
   test:
@@ -61,3 +66,24 @@ jobs:
     - name: Stop services
       if: always()
       run: docker compose down
+
+    - name: Install Allure CLI
+      if: always()
+      run: |
+        curl -sL https://github.com/allure-framework/allure2/releases/download/2.32.2/allure-2.32.2.tgz -o /tmp/allure.tgz
+        tar -xzf /tmp/allure.tgz -C /opt
+        sudo ln -s /opt/allure-2.32.2/bin/allure /usr/local/bin/allure
+
+    - name: Generate Allure report
+      if: always()
+      run: |
+        allure generate ./allure-results -o ./allure-report --clean
+
+    - name: Deploy to GitHub Pages
+      if: always()
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_branch: gh-pages
+        publish_dir: ./allure-report
+        force_orphan: true
