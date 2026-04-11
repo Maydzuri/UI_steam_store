@@ -50,4 +50,3 @@ def wait_for_services() -> None:
 
 if __name__ == "__main__":
     wait_for_services()
-
