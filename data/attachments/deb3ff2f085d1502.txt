@@ -1,0 +1,1 @@
+INFO     TestFramework:logger.py:37 Response status code='403', elapsed_time='0:00:00.002009'

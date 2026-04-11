@@ -1,0 +1,8 @@
+[2026-04-11 10:50:53 - INFO] - Response status code='201', elapsed_time='0:00:00.259327'
+[2026-04-11 10:50:53 - INFO] - Response status code='200', elapsed_time='0:00:00.296921'
+[2026-04-11 10:50:53 - INFO] - Response status code='201', elapsed_time='0:00:00.010186'
+[2026-04-11 10:50:54 - INFO] - Response status code='201', elapsed_time='0:00:00.009444'
+[2026-04-11 10:50:54 - INFO] - Response status code='201', elapsed_time='0:00:00.009628'
+[2026-04-11 10:50:54 - INFO] - Response status code='201', elapsed_time='0:00:00.010585'
+[2026-04-11 10:50:54 - INFO] - Response status code='201', elapsed_time='0:00:00.010767'
+[2026-04-11 10:50:54 - INFO] - Response status code='200', elapsed_time='0:00:00.008529'

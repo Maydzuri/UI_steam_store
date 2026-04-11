@@ -1,0 +1,4 @@
+INFO     TestFramework:logger.py:37 Response status code='201', elapsed_time='0:00:00.259381'
+INFO     TestFramework:logger.py:37 Response status code='200', elapsed_time='0:00:00.295415'
+INFO     TestFramework:logger.py:37 Response status code='200', elapsed_time='0:00:00.012262'
+INFO     TestFramework:logger.py:37 Response status code='200', elapsed_time='0:00:00.007409'

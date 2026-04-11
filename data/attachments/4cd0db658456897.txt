@@ -1,0 +1,4 @@
+[2026-04-11 10:51:07 - INFO] - Response status code='201', elapsed_time='0:00:00.259381'
+[2026-04-11 10:51:08 - INFO] - Response status code='200', elapsed_time='0:00:00.295415'
+[2026-04-11 10:51:08 - INFO] - Response status code='200', elapsed_time='0:00:00.012262'
+[2026-04-11 10:51:08 - INFO] - Response status code='200', elapsed_time='0:00:00.007409'
