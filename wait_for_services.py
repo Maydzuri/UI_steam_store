@@ -1,6 +1,7 @@
-import time
-import sys
 import os
+import sys
+import time
+
 import requests
 
 AUTH_URL = os.getenv("AUTH_SERVICE_API_URL", "http://auth:8000")
@@ -49,3 +50,4 @@ def wait_for_services() -> None:
 
 if __name__ == "__main__":
     wait_for_services()
+
