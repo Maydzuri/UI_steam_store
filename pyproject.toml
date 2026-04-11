@@ -1,0 +1,39 @@
+[tool.ruff]
+target-version = "py313"
+include = ["*.py", "**/*.py"]
+exclude = [
+    ".git",
+    ".idea",
+    ".pytest_cache",
+    "__pycache__",
+    "venv",
+    "logs",
+    "allure-results",
+    "allure-report",
+]
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "F",
+    "E",
+    "W",
+    "I",
+    "N",
+    "B",
+    "UP",
+    "SIM",
+]
+ignore = [
+    "E501",
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["config", "services", "tests", "utils"]
+lines-between-types = 1
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"

@@ -1,0 +1,8 @@
+pytest
+requests
+pydantic
+python-dotenv
+faker
+email-validator
+ruff
+allure-pytest
